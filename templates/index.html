@@ -6,12 +6,15 @@
 
 </head>
 <body>
-Hello
+    <h1>SELECT YOUR BUS STOP</h1>
+    <div id="form-container">
+        <form action="/getStop" method="post">
+            {% for key, value in data.iteritems() %}
+                <input type="radio" name="stop" value="{{ key }}"> {{ value }}<br>
+            {% endfor %}
+          <input type="submit" value="Submit">
+        </form>
+    </div>
 
-{% for item in data %}
-    <ul>
-        <li>{{ item }}</li>
-    </ul>
-{% endfor %}
 </body>
 </html>

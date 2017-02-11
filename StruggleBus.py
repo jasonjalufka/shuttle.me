@@ -5,41 +5,30 @@ from doublemap import DoubleMap
 
 app = Flask(__name__)
 
-display = []
+display = {}
 
 tracker = DoubleMap('txstate')
-# print(tracker.stop_info(1))
-# dictionary so when passed 71, it is trying to match id
-# var = input("Select your route ")
-# print("you selected", var)
 
-# for routekey, routevalue in tracker.routes.iteritems():
-#     for value in routevalue["stops"]:
-#         if value is var:
-#             print "Your stop is on the %s route (%d)" %(routevalue["name"], routekey)
-#             print routevalue
-#             display = routevalue["path"]
-#             print display
-#
 
 for stopkey, stopvalue in tracker.stops.iteritems():
-    print stopvalue["name"]
-    display.append(stopvalue["name"])
-
-
-#print(tracker.routes[397]["path"])
-#print(tracker.buses[427]["route"])
-#print(tracker.routes[tracker.buses[427]["route"]])
-
-# render map location takes in 2 arg, displays map
+    b = {stopkey: stopvalue["name"]}
+    display.update(b)
 
 
 @app.route('/')
-def hello_world():
-    print display
+def index():
     return flask.render_template("index.html", data=display)
-   # return flask.render_template("index.html", tracker.routes[tracker.buses[427]["route"]["u'color"]])
 
 
+@app.route('/getStop', methods=['POST'])
+def get_stop():
+    stop = flask.request.form['stop']
+    print tracker.stops[int(stop)]
+    return flask.render_template("temp.html", name = tracker.stops[int(stop)]["name"], lat = tracker.stops[int(stop)]["lat"], lon = tracker.stops[int(stop)]["lon"])
+
+
+@app.route('/getTime', methods=['POST'])
+def get_time():
+    return "gotem"
 if __name__ == '__main__':
     app.run()
