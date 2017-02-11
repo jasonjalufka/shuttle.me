@@ -10,6 +10,7 @@ class DoubleMap(object):
     Params: string organization (example: 'iupui')
     """
     def __init__(self, organization):
+        print("I am here")
         self.__domain = 'http://txstate.doublemap.com/map/v2'
 
     def bus_info(self, bus_id):
@@ -82,6 +83,7 @@ class DoubleMap(object):
 
 
 def main():
+    print("printing from main")
     # Fix for Python 2.x.
     try:
         input = raw_input
