@@ -10,4 +10,7 @@ dist
 *.swp
 *.swo
 *~
+
+# pycharm
 .idea/workspace.xml
+.idea
