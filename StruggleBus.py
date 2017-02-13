@@ -9,10 +9,8 @@ display = {}
 
 tracker = DoubleMap('txstate')
 
-
-for stopkey, stopvalue in tracker.stops.iteritems():
-    b = {stopkey: stopvalue["name"]}
-    display.update(b)
+for stopKey, stopValue in tracker.stops.iteritems():
+    display.update({stopKey: stopValue["name"]})
 
 
 @app.route('/')
@@ -30,5 +28,7 @@ def get_stop():
 @app.route('/getTime', methods=['POST'])
 def get_time():
     return "gotem"
+
+
 if __name__ == '__main__':
     app.run()
