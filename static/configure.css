@@ -1,0 +1,11 @@
+html {
+    background-image: url("images/background.jpg");
+    background-size: cover;
+}
+
+#title {
+    font-family: Sansita, sans-serif;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 3px #74777c;
+}

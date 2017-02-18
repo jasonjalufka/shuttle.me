@@ -15,8 +15,8 @@ for stopKey, stopValue in tracker.stops.iteritems():
 
 @app.route('/')
 def index():
-    return flask.render_template("index.html", data=display)
-
+    return flask.render_template("configure.html")
+    # return flask.render_template("index.html", data=display)
 
 @app.route('/getStop', methods=['POST'])
 def get_stop():
