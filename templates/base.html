@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <title>shuttle.me - {% block title %}{% endblock %}</title>
+    <meta name="description" content="TxState Shuttle Alert System">
+    <meta name="author" content="Jason Jalufka, Abigail Barron, Ryan Jalufka">
+
+    <! -- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <! -- FAVICON -->
+    <link rel="icon" href="../static/images/favicon.ico">
+    <! -- FONT -->
+    <link href='https://fonts.googleapis.com/css?family=Sansita' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
+    <! -- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='configure.css') }}">
+
+    <! -- SCRIPTS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+    {% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

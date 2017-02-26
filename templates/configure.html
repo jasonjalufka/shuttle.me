@@ -1,30 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>shuttle.me - configure</title>
-    <meta name="description" content="TxState Shuttle Alert System">
-    <meta name="author" content="Jason Jalufka, Abigail Barron, Ryan Jalufka">
-
-    <! -- Mobile Specific Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <! -- FONT -->
-    <link href='https://fonts.googleapis.com/css?family=Sansita' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-
-    <! -- CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='configure.css') }}">
-
-    <! -- SCRIPTS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-
-</head>
-<body>
-
+{% extends "base.html" %}
+{% block title %}configure{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
 <div class="section header">
     <div class="container">
         <div class="row">
@@ -46,7 +25,48 @@
              </div>
          </div>
     </div>
+    <div class="container">
+    <form action="/getConfig" method="post">
+        <div class="row stop-select">
+            <h5 class="config-info" style="clear:both";>Select your stop from the list below</h5>
+            <div class="row stop-input">
+                <div class="four columns offset-by-two">
+                    <select class="u-full-width" name="bus-stops">
+                        {% for key, value in data.iteritems() %}
+                            <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="four columns">
+                    <input class="button-primary config-submit u-full-width" type="button" value="Next">
+                </div>
+            </div>
+        </div>
+        <div class="row distance-select">
+            <h5 class="config-info" style="clear:both";>How long does it take you to walk to your stop?</h5>
+            <div class="row distance-input">
+                <div class="four columns offset-by-two">
+                    <input class="u-full-width" type="number" id="distanceInput" name="distance">
+                </div>
+                <div class="four columns">
+                    <input class="button-primary config-submit u-full-width" type="button" value="Next">
+                </div>
+            </div>
+        </div>
+        <div class="row alert-select">
+            <h5 class="config-info" style="clear:both";>Select the alerts you would like to receive.</h5>
+            <div class="row alert-input">
+                <div class="four columns offset-by-two">
+                    <label><input type="checkbox" id="audioToggle" name="check" value="audio"> Audio alerts</label>
+                    <label><input type="checkbox" id="visualToggle" name="check" value="visual"> Visual Alerts</label>
+                </div>
+                <input class="button-primary config-submit u-full-width" type="submit" value="Submit">
+            </div>
+        </div>
+    </form>
+    </div>
 </div>
 
-</body>
-</html>
+<script src="../static/ui.js"> type="text/javascript"</script>
+
+{% endblock %}
