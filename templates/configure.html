@@ -38,7 +38,7 @@
                     </select>
                 </div>
                 <div class="four columns">
-                    <input class="button-primary config-submit u-full-width" type="button" value="Next">
+                    <input id="stop-next" class="button-primary config-submit u-full-width" type="button" value="Next">
                 </div>
             </div>
         </div>
@@ -49,16 +49,24 @@
                     <input class="u-full-width" type="number" id="distanceInput" name="distance">
                 </div>
                 <div class="four columns">
-                    <input class="button-primary config-submit u-full-width" type="button" value="Next">
+                    <input id="distance-next" class="button-primary config-submit u-full-width" type="button" value="Next">
                 </div>
             </div>
         </div>
         <div class="row alert-select">
             <h5 class="config-info" style="clear:both";>Select the alerts you would like to receive.</h5>
             <div class="row alert-input">
-                <div class="four columns offset-by-two">
-                    <label><input type="checkbox" id="audioToggle" name="check" value="audio"> Audio alerts</label>
-                    <label><input type="checkbox" id="visualToggle" name="check" value="visual"> Visual Alerts</label>
+                <div class="checkboxes four columns offset-by-two">
+                    <table>
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;">
+                        <div>
+                            <label><input style="text-align: center;vertical-align: middle" type="checkbox" id="audioToggle" name="check" value="audio"> Audio alerts</label>
+                            <label><input style="text-align: center;vertical-align: middle" type="checkbox" id="visualToggle" name="check" value="visual"> Visual Alerts</label>
+                        </div>
+                        </td>
+                    </tr>
+                    </table>
                 </div>
                 <input class="button-primary config-submit u-full-width" type="submit" value="Submit">
             </div>

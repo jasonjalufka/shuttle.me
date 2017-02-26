@@ -16,13 +16,14 @@ $( document ).ready(function() {
         $('.alert-select').hide();
     });
 
-    $('.btn-mid').click(function () {
+    $('.btn-mid, #stop-next').click(function () {
         $('.stop-select').hide();
         $('.distance-select').show();
+        $('#distanceInput').focus();
         $('.alert-select').hide();
     });
 
-    $('.btn-right').click(function () {
+    $('.btn-right, #distance-next').click(function () {
         $('.stop-select').hide();
         $('.distance-select').hide();
         $('.alert-select').show();
