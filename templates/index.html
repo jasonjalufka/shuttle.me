@@ -1,20 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Struggle Buggy</title>
+{% extends "base.html" %}
+{% block title %}home{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
 
-</head>
-<body>
-    <h1>SELECT YOUR BUS STOP</h1>
-    <div id="form-container">
-        <form action="/getStop" method="post">
-            {% for key, value in data.iteritems() %}
-                <input type="radio" name="stop" value="{{ key }}"> {{ value }}<br>
-            {% endfor %}
-          <input type="submit" value="Submit">
-        </form>
-    </div>
-
-</body>
-</html>
+    <h1>Welcome to shuttle.me</h1>
+    <p>Never miss the bus again</p>
+    <button><a href="{{ url_for('configure') }}">Get Started!</a></button>
+{#    <h1>SELECT YOUR BUS STOP</h1>#}
+{#    <div id="form-container">#}
+{#        <form action="/getStop" method="post">#}
+{#            {% for key, value in data.iteritems() %}#}
+{#                <input type="radio" name="stop" value="{{ key }}"> {{ value }}<br>#}
+{#            {% endfor %}#}
+{#          <input type="submit" value="Submit">#}
+{#        </form>#}
+{#    </div>#}
+{% endblock %}

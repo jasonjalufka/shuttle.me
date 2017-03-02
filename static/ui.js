@@ -28,5 +28,6 @@ $( document ).ready(function() {
         $('.distance-select').hide();
         $('.alert-select').show();
     });
+
 });
 
