@@ -4,14 +4,13 @@ from doublemap import DoubleMap
 import json
 import os
 
-userPreferences = {}
-
 app = Flask(__name__)
 
 if os.path.exists('db.json'):
     userPreferences = json.load(open('db.json', 'r', encoding='UTF8'))
 
 display = {}
+userPreferences = {}
 
 tracker = DoubleMap('txstate')
 
@@ -59,8 +58,8 @@ def configure():
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
-
-    return flask.render_template("configure.html", data=display)
+    else:
+        return flask.render_template("configure.html", data=display)
 
 
 @app.route('/getStop', methods=['POST'])

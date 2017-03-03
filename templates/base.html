@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% block head %}
     <meta charset="UTF-8">
     <title>shuttle.me - {% block title %}{% endblock %}</title>
     <meta name="description" content="TxState Shuttle Alert System">
@@ -24,7 +23,6 @@
     <! -- SCRIPTS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='ui.js') }}"></script>
-    {% endblock %}
 </head>
 <body>
     {% block content %}{% endblock %}
