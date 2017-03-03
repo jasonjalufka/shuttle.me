@@ -10,7 +10,6 @@ class DoubleMap(object):
     Params: string organization (example: 'iupui')
     """
     def __init__(self, organization):
-        print("I am here")
         self.__domain = 'http://txstate.doublemap.com/map/v2'
 
     def bus_info(self, bus_id):
