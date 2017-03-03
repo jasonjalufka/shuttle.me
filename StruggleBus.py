@@ -24,7 +24,7 @@ def index():
     # return flask.render_template("configure.html", data=display)
 
 
-@app.route('/getConfig', methods=['GET', 'POST'])
+@app.route('/configure', methods=['GET', 'POST'])
 def configure():
     if flask.request.method == 'POST':
         print "Configuration Info:"

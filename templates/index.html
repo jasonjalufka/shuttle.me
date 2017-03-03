@@ -1,10 +1,31 @@
 {% extends "base.html" %}
 {% block title %}home{% endblock %}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 {% block content %}
+<div class="section header">
+    <div class="container">
+        <div class="row">
+            <img class="logo" src="/static/images/shuttle.png" alt="shuttle logo" style="width: 75px; height: 75px;">
+        </div>
+        <div class="row">
+            <h1 id="title">shuttle.me</h1>
+        </div>
+    </div>
+</div>
+<div class="section intro">
+    <div class="container">
+        <div class="row">
+            <div class="one-half column">
+                <h1>Welcome to shuttle.me</h1>
+                <h4>Never miss the bus again</h4>
+            </div>
+            <div class="one-half column">
+                <a class="button button-primary" href="{{ url_for('configure') }}">Get started!</a>
+            </div>
 
-    <h1>Welcome to shuttle.me</h1>
-    <p>Never miss the bus again</p>
-    <button><a href="{{ url_for('configure') }}">Get Started!</a></button>
+        </div>
+    </section>
+</div>
 {#    <h1>SELECT YOUR BUS STOP</h1>#}
 {#    <div id="form-container">#}
 {#        <form action="/getStop" method="post">#}
