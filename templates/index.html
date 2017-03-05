@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}home{% endblock %}
-<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+{% block CSS %}<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">{% endblock %}
 {% block content %}
 <div class="section header">
     <div class="container">
@@ -12,15 +12,15 @@
         </div>
     </div>
 </div>
-<div class="section intro">
+<div class="section main">
     <div class="container">
         <div class="row">
-            <div class="one-half column">
+            <div class="twelve columns intro">
                 <h1>Welcome to shuttle.me</h1>
                 <h4>Never miss the bus again</h4>
             </div>
-            <div class="one-half column">
-                <a class="button button-primary" href="{{ url_for('configure') }}">Get started!</a>
+            <div class="twelve columns">
+                <a class="start-button button-primary" href="{{ url_for('configure') }}">Get started!</a>
             </div>
 
         </div>

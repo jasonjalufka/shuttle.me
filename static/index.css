@@ -3,8 +3,6 @@ html {
     background-size: cover;
 }
 
-
-
 #title {
     font-family: Sansita, sans-serif;
     color: white;
@@ -20,4 +18,8 @@ html {
     margin-left: auto;
     -webkit-filter: drop-shadow(1px 1px 3px #74777c);
     filter: drop-shadow(1px 1px 3px #74777c);
+}
+
+.intro {
+    text-align: center;
 }

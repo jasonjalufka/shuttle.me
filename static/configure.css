@@ -54,7 +54,8 @@ html {
 }
 
 .btn-group .button:hover {
-    background-color: #25bbf0;
+    /*background-color: #25bbf0;*/
+    background-color: #7ad8f5;
     /*opacity: 0.4;*/
 }
 

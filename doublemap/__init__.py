@@ -107,6 +107,7 @@ def main():
     else:
         print("A single route cannot be taken.")
 
+
 def select_location(tracker):
     """ Prompt the user for a location and return the stop_id. """
     try:
