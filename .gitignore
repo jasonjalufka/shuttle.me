@@ -2,6 +2,7 @@ program.asm
 venv
 build
 dist
+.DS_Store
 
 # python specific
 *.pyc
