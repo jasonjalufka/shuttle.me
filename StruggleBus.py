@@ -6,11 +6,15 @@ import os
 
 app = Flask(__name__)
 
-if os.path.exists('db.json'):
-    userPreferences = json.load(open('db.json', 'r', encoding='UTF8'))
+# if os.path.exists('db.json'):
+#     userPreferences = json.load(open('db.json', 'r', encoding='UTF8'))
 
 display = {}
 userPreferences = {}
+
+# Load user preferences from json file
+# with open('db.json') as f:
+#     userPreferences = json.load(f)
 
 tracker = DoubleMap('txstate')
 
