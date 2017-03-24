@@ -37,3 +37,7 @@ body {
 .go {
     display: inline-block;
 }
+
+.current-buses {
+    text-align: center;
+}
