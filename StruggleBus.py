@@ -18,9 +18,7 @@ for stopKey, stopValue in tracker.stops.iteritems():
 def index():
     # retrieve the current amount of buses running
     current = len(tracker.buses)
-    print current
     return flask.render_template("index.html", current=current)
-    # return flask.render_template("configure.html", data=display)
 
 
 @app.route('/configure', methods=['GET', 'POST'])

@@ -1,5 +1,6 @@
 html {
-    background-image: url("images/background.jpg");
+    background-color: #044F67;
+    /*background-image: url("images/background.jpg");*/
     background-size: cover;
 }
 
@@ -84,6 +85,13 @@ html {
     margin-right: auto;
 }
 
+config-submit {
+    color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 table {
     max-width: 80%;
     margin-left: auto;
@@ -96,10 +104,12 @@ td {
 
 #audiotoggle {
     margin-bottom: 0.5rem;
+    color: white;
 }
 
 #visualToggle {
     margin-bottom: 0.5rem;
+    color: white;
 }
 
 /* Sets new rules for input boxes once screen size is larger than 550px */
