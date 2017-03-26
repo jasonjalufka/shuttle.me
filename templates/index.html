@@ -16,23 +16,19 @@
     <div class="container">
         <div class="row">
             <div class="twelve columns intro">
-                <h1>Welcome to shuttle.me</h1>
+{#                <h1>Welcome to shuttle.me</h1>#}
                 <h4>Never miss the bus again</h4>
             </div>
-            <div class="twelve columns">
-                <a class="start-button button-primary" href="{{ url_for('configure') }}">Get started!</a>
+            <div class="get-started">
+                <a class="go button button-primary" href="{{ url_for('configure') }}">Get started!</a>
+            </div>
+
+            <div class="current-buses u-full-width">
+                <h5>Currently, there are {{ current }} buses running. Don't miss yours.</h5>
             </div>
 
         </div>
     </section>
 </div>
-{#    <h1>SELECT YOUR BUS STOP</h1>#}
-{#    <div id="form-container">#}
-{#        <form action="/getStop" method="post">#}
-{#            {% for key, value in data.iteritems() %}#}
-{#                <input type="radio" name="stop" value="{{ key }}"> {{ value }}<br>#}
-{#            {% endfor %}#}
-{#          <input type="submit" value="Submit">#}
-{#        </form>#}
-{#    </div>#}
+
 {% endblock %}

@@ -1,13 +1,18 @@
 html {
-    background-image: url("images/background.jpg");
+    background-color: #044F67;
+    /*background-image: url("images/background.jpg");*/
     background-size: cover;
+}
+
+body {
+    color: white;
 }
 
 #title {
     font-family: Sansita, sans-serif;
     color: white;
     text-align: center;
-    text-shadow: 1px 1px 3px #74777c;
+    /*text-shadow: 1px 1px 3px #74777c;*/
 }
 
 .logo {
@@ -16,10 +21,23 @@ html {
     margin-right: auto;
     margin-bottom: 0px;
     margin-left: auto;
-    -webkit-filter: drop-shadow(1px 1px 3px #74777c);
-    filter: drop-shadow(1px 1px 3px #74777c);
+    /*-webkit-filter: drop-shadow(1px 1px 3px #74777c);*/
+    /*filter: drop-shadow(1px 1px 3px #74777c);*/
 }
 
 .intro {
+    text-align: center;
+}
+
+.get-started {
+    text-align: center;
+    padding: 30px;
+}
+
+.go {
+    display: inline-block;
+}
+
+.current-buses {
     text-align: center;
 }

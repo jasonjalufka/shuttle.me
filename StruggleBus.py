@@ -6,15 +6,7 @@ import os
 
 app = Flask(__name__)
 
-# if os.path.exists('db.json'):
-#     userPreferences = json.load(open('db.json', 'r', encoding='UTF8'))
-
 display = {}
-userPreferences = {}
-
-# Load user preferences from json file
-# with open('db.json') as f:
-#     userPreferences = json.load(f)
 
 tracker = DoubleMap('txstate')
 
@@ -24,8 +16,9 @@ for stopKey, stopValue in tracker.stops.iteritems():
 
 @app.route('/')
 def index():
-    return flask.render_template("index.html")
-    # return flask.render_template("configure.html", data=display)
+    # retrieve the current amount of buses running
+    current = len(tracker.buses)
+    return flask.render_template("index.html", current=current)
 
 
 @app.route('/configure', methods=['GET', 'POST'])
@@ -44,21 +37,6 @@ def configure():
             visual = True
         else:
             visual = False
-
-        userPreferences.update({'Stop': stop, 'Distance': distance, 'Audio': audio, 'Visual': visual})
-
-        print "Distance: " + distance + " minutes"
-        if audio:
-            print "audio toggle is on"
-        else:
-            print "audio toggle is off"
-
-        if visual:
-            print "visual toggle is on"
-        else:
-            print "visual toggle is off"
-
-        print "Selected Stop: " + tracker.stops[int(stop)]["name"]
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
