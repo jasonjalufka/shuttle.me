@@ -66,18 +66,6 @@ def configure():
         return flask.render_template("configure.html", data=display)
 
 
-@app.route('/getStop', methods=['POST'])
-def get_stop():
-    stop = flask.request.form['bus-stops']
-    print tracker.stops[int(stop)]
-    return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"], lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
-
-
-@app.route('/getTime', methods=['POST'])
-def get_time():
-    return "gotem"
-
-
 @app.errorhandler(404)
 def page_not_found(err):
     return flask.render_template('404.html'), 404
