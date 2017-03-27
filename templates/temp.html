@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ name }}</title>
+{% extends 'base.html' %}
+{% block title %}dashboard{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
+    <script src="{{ url_for('static', filename='update.js') }}"></script>
+{% endblock %}
+{% block content %}
+    <h1>Dashboard</h1>
     <a href="http://maps.google.com/?q={{ lat }},{{ lon }}">{{ name }}</a>
     <div>
         <ul>
             <li>Your Stop: {{ name }}</li>
         </ul>
     </div>
-</head>
-<body>
-
-</body>
-</html>
+{% endblock %}

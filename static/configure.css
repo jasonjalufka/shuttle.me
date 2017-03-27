@@ -8,7 +8,7 @@ html {
     font-family: Sansita, sans-serif;
     color: white;
     text-align: center;
-    text-shadow: 1px 1px 3px #74777c;
+    /*text-shadow: 1px 1px 3px #74777c;*/
 }
 
 .logo {
@@ -17,8 +17,8 @@ html {
     margin-right: auto;
     margin-bottom: 0px;
     margin-left: auto;
-    -webkit-filter: drop-shadow(1px 1px 3px #74777c);
-    filter: drop-shadow(1px 1px 3px #74777c);
+    /*-webkit-filter: drop-shadow(1px 1px 3px #74777c);*/
+    /*filter: drop-shadow(1px 1px 3px #74777c);*/
 }
 
 /* ---------------- Button Panel CSS ---------------- */

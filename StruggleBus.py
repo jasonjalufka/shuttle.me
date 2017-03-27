@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, render_template, request
 import flask
 from doublemap import DoubleMap
 import json
@@ -21,8 +21,13 @@ def index():
     return flask.render_template("index.html", current=current)
 
 
-@app.route('/configure', methods=['GET', 'POST'])
+@app.route('/configure', methods=['GET'])
 def configure():
+        return flask.render_template("configure.html", data=display)
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
     if flask.request.method == 'POST':
         print "Configuration Info:"
         stop = flask.request.form['bus-stops']
@@ -40,9 +45,10 @@ def configure():
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
-    else:
-        return flask.render_template("configure.html", data=display)
 
+
+# @app.route('/_request_route')
+# def request_route():
 
 @app.errorhandler(404)
 def page_not_found(err):
