@@ -73,7 +73,7 @@ def page_not_found(err):
 
 @ask.launch
 def start_skill():
-    welcome_message = 'Hello, welcome to Shuttle Me. Would you like the number of buses running?'
+    welcome_message = 'Hello, welcome to Shuttle Me. What would you like me to do?'
     return question(welcome_message) \
     .reprompt("I didn't catch that. Would you like the number of buses running?")
 
@@ -91,19 +91,18 @@ def yes_intent():
     current = "your current stop is " + tracker.stops[int(11)]["name"]
     return statement(current)
 
-@ask.intent("NoIntent")
-def no_intent():
-    bye_text = 'Okay... goodbye'
-    return statement(bye_text)
+@ask.intent("BusQuantityIntent")
+def bus_quantity_intent():
+    current = len(tracker.buses)
+    return statement("There are " + str(current) + " busses running at the moment")
 
-@ask.intent("BusNumberIntent")
-def bus_number_intent():
+
+@ask.intent("BusIDIntent")
+def bus_ID_intent():
     bus_message = "Which bus number's ETA would you like?"
     return question(bus_message)
-    busInfo = tracker.stops[int()]["name"]
-    return statement()
 
-@ask.intent("BusNumReplyIntent")
+@ask.intent("BusIDReplyIntent")
 def bus_num_intent():
     notice = ""
     return question(notice)
