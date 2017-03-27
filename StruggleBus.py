@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import flask
 from doublemap import DoubleMap
 from flask_ask import Ask, statement, question, session
@@ -24,10 +24,6 @@ def index():
     print current
     return flask.render_template("index.html", current=current)
     # return flask.render_template("configure.html", data=display)
-
-def indexForAlexa():
-    current = len(tracker.buses)
-    return current
 
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
@@ -77,28 +73,45 @@ def page_not_found(err):
 
 @ask.launch
 def start_skill():
-    welcome_message = 'Hello, welcome to Alexa. Would you like the number of buses running?'
-    return question(welcome_message)
+    welcome_message = 'Hello, welcome to Shuttle Me. Would you like the number of buses running?'
+    return question(welcome_message) \
+    .reprompt("I didn't catch that. Would you like the number of buses running?")
 
 
 #navigation for yes or no. 'Intent' is input from user
 #utterance is the way that user says the intent
+#@ask.intent("StopsIntent")
+#def stops
+
+#if json file is populated, do questions. if not, ask user to say a specific route.
+#maybe use session.attributes to keep data relevant for the current user.
+
 @ask.intent("YesIntent")
 def yes_intent():
-    headline_msg = 'Number of buses!'
-    current = tracker.stops[int(10)]["name"]
-    return statement(current)  #what alexa says/returns
+    current = "your current stop is " + tracker.stops[int(11)]["name"]
+    return statement(current)
 
 @ask.intent("NoIntent")
 def no_intent():
     bye_text = 'Okay... goodbye'
     return statement(bye_text)
 
-@ask.intent("HelpIntent")
-def help_intent():
-    help_text = 'Here are some things you can ask me...' \
-                ''
-    return statement(help_text)
+@ask.intent("BusNumberIntent")
+def bus_number_intent():
+    bus_message = "Which bus number's ETA would you like?"
+    return question(bus_message)
+    busInfo = tracker.stops[int()]["name"]
+    return statement()
+
+@ask.intent("BusNumReplyIntent")
+def bus_num_intent():
+    notice = ""
+    return question(notice)
+
+@ask.session_ended
+def session_ended():
+    return "", 200
+
 
 ######################################################
 
