@@ -10,6 +10,28 @@ display = {}
 
 tracker = DoubleMap('txstate')
 
+shortPath = []
+print tracker.route_info(408)["path"]
+longPath = tracker.route_info(408)["path"]
+total = len(longPath)/2
+skip = (total/23)*2
+stopLat = tracker.stop_info(38)["lat"]
+
+print skip
+for i in range(0, len(longPath)-1, skip):
+    if longPath[i] == stopLat:
+        print "found the stop dot"
+        break
+    shortPath.append(longPath[i])
+    shortPath.append(longPath[i+1])
+
+shortPath.append(longPath[(total * 2) - 2])
+shortPath.append(longPath[(total*2)-1])
+
+print shortPath
+print len(shortPath)/2
+
+
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
@@ -47,8 +69,14 @@ def dashboard():
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
 
 
-# @app.route('/_request_route')
-# def request_route():
+@app.route('/_get_route')
+def get_route():
+    blancoRiver = 408
+    shortPath = ()
+    longPath = tracker.route_info(blancoRiver)["path"]
+
+    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":[]}&outFormat=json&key=KEY'
+
 
 @app.errorhandler(404)
 def page_not_found(err):
