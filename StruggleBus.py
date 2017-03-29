@@ -10,26 +10,54 @@ display = {}
 
 tracker = DoubleMap('txstate')
 
-shortPath = []
-print tracker.route_info(408)["path"]
-longPath = tracker.route_info(408)["path"]
-total = len(longPath)/2
-skip = (total/23)*2
-stopLat = tracker.stop_info(38)["lat"]
-
-print skip
-for i in range(0, len(longPath)-1, skip):
-    if longPath[i] == stopLat:
-        print "found the stop dot"
-        break
-    shortPath.append(longPath[i])
-    shortPath.append(longPath[i+1])
-
-shortPath.append(longPath[(total * 2) - 2])
-shortPath.append(longPath[(total*2)-1])
-
-print shortPath
-print len(shortPath)/2
+# routeNumber = 447
+# shortPath = []
+# formattedLongPath = []
+# locations = []
+# longPath = tracker.route_info(routeNumber)["path"]
+# print "LONG PATH LIST"
+# print longPath
+# for point in longPath:
+#     formattedLongPath.append(str(point)[:-3])
+# # formattedLongPath = ["%.3f" % point for point in longPath]
+# # print formattedLongPath
+# print "FORMATTED PATH LIST"
+# print formattedLongPath
+# total = len(longPath)/2
+# skip = (total/23)*2
+#
+# stopLat = tracker.stop_info(16)["lat"]
+# stopLon = tracker.stop_info(16)["lon"]
+#
+# lat = str(stopLat)[:-3]
+# lon = str(stopLon)[:-3]
+# print lat
+# print lon
+#
+# # Find user's stop along route path in order to shorten the amount of data
+# # If stop is found along path, stopIndex will be used to determine how many times next for loop will run
+# stopIndex = 0
+# for point in range(0, len(formattedLongPath), 2):
+#     if formattedLongPath[point] == lat:
+#         if formattedLongPath[point + 1] == lon:
+#             print "Stop found at %s, %s\n Stop index: %d" % (lat, lon, stopIndex)
+#             lastLocation = "%s, %s" % (lat, lon)
+#             break
+#     stopIndex += 2
+#
+#
+# print skip
+# for i in range(0, len(longPath)-1, skip):
+#     if longPath[i] == stopLat:
+#         print "found the stop dot"
+#         break
+#     shortPath.append(longPath[i])
+#     shortPath.append(longPath[i+1])
+#
+# shortPath.append(longPath[(total * 2) - 2])
+# shortPath.append(longPath[(total*2)-1])
+#
+# print len(shortPath)/2
 
 
 for stopKey, stopValue in tracker.stops.iteritems():
