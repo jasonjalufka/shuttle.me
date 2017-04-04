@@ -1,17 +1,20 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, json
 import flask
 from doublemap import DoubleMap
-from flask_ask import Ask, statement, question, session
-import json
+from flask_ask import Ask, request, statement, question, session
+import logging
 import os
-import requests
+
 
 app = Flask(__name__)
-ask = Ask(app, "/doublemap_reader")
+ask = Ask(app, "/")
+tracker = DoubleMap('txstate')
+
+logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 display = {}
+#settings = dict.fromkeys(['audio','visual'])
 
-tracker = DoubleMap('txstate')
 
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
@@ -22,8 +25,12 @@ def index():
     # retrieve the current amount of buses running
     current = len(tracker.buses)
     print current
-    return flask.render_template("index.html", current=current)
+
+    file = open('db.txt', 'w')
+    file.write('This is a test\n')
+
     # return flask.render_template("configure.html", data=display)
+    return flask.render_template("index.html", current=current)
 
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
@@ -33,7 +40,7 @@ def configure():
         distance = flask.request.form['distance']
         toggles = flask.request.form.getlist('check')
         if 'audio' in toggles:
-            audio = True
+            audio =True
         else:
             audio = False
 
@@ -73,9 +80,8 @@ def page_not_found(err):
 
 @ask.launch
 def start_skill():
-    welcome_message = 'Hello, welcome to Shuttle Me. What would you like me to do?'
-    return question(welcome_message) \
-    .reprompt("I didn't catch that. Would you like the number of buses running?")
+    question_text = render_template('welcome')
+    return question(question_text)
 
 
 #navigation for yes or no. 'Intent' is input from user
@@ -91,6 +97,7 @@ def yes_intent():
     current = "your current stop is " + tracker.stops[int(11)]["name"]
     return statement(current)
 
+
 @ask.intent("BusQuantityIntent")
 def bus_quantity_intent():
     current = len(tracker.buses)
@@ -102,10 +109,6 @@ def bus_ID_intent():
     bus_message = "Which bus number's ETA would you like?"
     return question(bus_message)
 
-@ask.intent("BusIDReplyIntent")
-def bus_num_intent():
-    notice = ""
-    return question(notice)
 
 @ask.session_ended
 def session_ended():
@@ -115,4 +118,4 @@ def session_ended():
 ######################################################
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)
