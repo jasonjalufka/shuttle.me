@@ -1,65 +1,59 @@
 from flask import Flask, jsonify, render_template, request
 import flask
 from doublemap import DoubleMap
+from functools import partial
+import math
+import requests
 import json
 import os
 
 app = Flask(__name__)
 
-display = {}
+# Load database into data variable
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+db_url = os.path.join(SITE_ROOT, "db.json")
+data = json.load(open(db_url))
 
+display = {}
 tracker = DoubleMap('txstate')
 
-# routeNumber = 447
-# shortPath = []
-# formattedLongPath = []
-# locations = []
-# longPath = tracker.route_info(routeNumber)["path"]
-# print "LONG PATH LIST"
-# print longPath
-# for point in longPath:
-#     formattedLongPath.append(str(point)[:-3])
-# # formattedLongPath = ["%.3f" % point for point in longPath]
-# # print formattedLongPath
-# print "FORMATTED PATH LIST"
-# print formattedLongPath
-# total = len(longPath)/2
-# skip = (total/23)*2
-#
-# stopLat = tracker.stop_info(16)["lat"]
-# stopLon = tracker.stop_info(16)["lon"]
-#
-# lat = str(stopLat)[:-3]
-# lon = str(stopLon)[:-3]
-# print lat
-# print lon
-#
-# # Find user's stop along route path in order to shorten the amount of data
-# # If stop is found along path, stopIndex will be used to determine how many times next for loop will run
-# stopIndex = 0
-# for point in range(0, len(formattedLongPath), 2):
-#     if formattedLongPath[point] == lat:
-#         if formattedLongPath[point + 1] == lon:
-#             print "Stop found at %s, %s\n Stop index: %d" % (lat, lon, stopIndex)
-#             lastLocation = "%s, %s" % (lat, lon)
-#             break
-#     stopIndex += 2
-#
-#
-# print skip
-# for i in range(0, len(longPath)-1, skip):
-#     if longPath[i] == stopLat:
-#         print "found the stop dot"
-#         break
-#     shortPath.append(longPath[i])
-#     shortPath.append(longPath[i+1])
-#
-# shortPath.append(longPath[(total * 2) - 2])
-# shortPath.append(longPath[(total*2)-1])
-#
-# print len(shortPath)/2
+
+# IGNORE THIS SECTION IT WILL BE MOVED LATER!!!!
+stopLat = tracker.stop_info(38)["lat"]
+stopLon = tracker.stop_info(38)["lon"]
+
+fullPath = tracker.route_info(408)["path"]
+
+# separate fullPath into coordinate lat, lon pairs
+pairs = zip(fullPath[::2], fullPath[1::2])
+
+# find coordinate closest to stop coordinate in route
+dist = lambda s, d: (s[0]-d[0])**2+(s[1]-d[1])**2
+coord = (stopLat, stopLon)
+lastPair = min(pairs, key=partial(dist, coord))
+
+# index of closest coordinate to stop
+# tells us last coordinate to load
+endLocationIndex = pairs.index(lastPair)
+
+# this isn't right
+skip = (endLocationIndex/23)
 
 
+count = 0
+locations = [pairs[0]]
+
+for pair in pairs[1:endLocationIndex:5]:
+    locations.append(pair)
+locations.append(coord)
+
+
+print locations
+print len(locations)
+url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":[%s]}&outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % ''.join(map(str, locations))
+mapquest_response = requests.get(url).json()
+print mapquest_response
+print url
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
@@ -97,7 +91,7 @@ def dashboard():
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
 
 
-@app.route('/_get_route')
+@app.route('/_get_arrival_time')
 def get_route():
     blancoRiver = 408
     shortPath = ()
