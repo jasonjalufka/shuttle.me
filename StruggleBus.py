@@ -1,14 +1,16 @@
 from flask import Flask, jsonify, render_template, request
+from flask_ask import Ask, request, statement, question, session
 import flask
+import logging
 from doublemap import DoubleMap
 import json
 import os
 
 app = Flask(__name__)
+tracker = DoubleMap('txstate')
+ask = Ask(app, "/")
 
 display = {}
-
-tracker = DoubleMap('txstate')
 
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
@@ -54,5 +56,17 @@ def dashboard():
 def page_not_found(err):
     return flask.render_template('404.html'), 404
 
+### Alexa flask-ask section ###
+
+@ask.launch
+def start_skill():
+    question_text = render_template('welcome')
+    return question(question_text)
+
+@ask.session_ended
+def session_ended():
+    return "session ended... ", 200
+
 if __name__ == '__main__':
     app.run(debug=True)
+    logging.getLogger('flask_ask').setLevel(logging.DEBUG)
