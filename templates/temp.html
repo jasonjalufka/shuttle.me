@@ -5,11 +5,23 @@
     <script src="{{ url_for('static', filename='update.js') }}"></script>
 {% endblock %}
 {% block content %}
-    <h1>Dashboard</h1>
-    <a href="http://maps.google.com/?q={{ lat }},{{ lon }}">{{ name }}</a>
-    <div>
-        <ul>
-            <li>Your Stop: {{ name }}</li>
-        </ul>
+<div class="section header">
+    <div class="container">
+        <div class="row">
+            <h1>Dashboard - {{ name }}</h1>
+            <h4><a href="http://maps.google.com/?q={{ lat }},{{ lon }}">{{ name }}</a></h4>
+        </div>
     </div>
+</div>
+<div class="section countdown">
+    <div class="container">
+        <div class="row">
+            <div class="six columns offset-by-three" style="background-color: red;">
+                <p>this is where the timer might go</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}

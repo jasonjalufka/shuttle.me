@@ -3,6 +3,9 @@ from flask_ask import Ask, request, statement, question, session
 import flask
 import logging
 from doublemap import DoubleMap
+from functools import partial
+import math
+import requests
 import json
 import os
 
@@ -10,8 +13,59 @@ app = Flask(__name__)
 tracker = DoubleMap('txstate')
 ask = Ask(app, "/")
 
-display = {}
+# Load database into data variable
+#SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+#db_url = os.path.join(SITE_ROOT, "db.json")
+#data = json.load(open(db_url))
 
+<<<<<<< HEAD
+=======
+display = {}
+tracker = DoubleMap('txstate')
+
+
+# IGNORE THIS SECTION IT WILL BE MOVED LATER!!!!
+stopLat = tracker.stop_info(38)["lat"]
+stopLon = tracker.stop_info(38)["lon"]
+
+fullPath = tracker.route_info(408)["path"]
+
+# separate fullPath into coordinate lat, lon pairs
+pairs = zip(fullPath[::2], fullPath[1::2])
+
+# find coordinate closest to stop coordinate in route
+dist = lambda s, d: (s[0]-d[0])**2+(s[1]-d[1])**2
+coord = (stopLat, stopLon)
+lastPair = min(pairs, key=partial(dist, coord))
+
+# index of closest coordinate to stop
+# tells us last coordinate to load
+endLocationIndex = pairs.index(lastPair)
+
+# this isn't right
+skip = (endLocationIndex/23)
+
+count = 0
+locations = []
+#locations = [pairs[0][0]]
+#locations.append(pairs[0][1])
+
+for pair in pairs[0:endLocationIndex:4]:
+    test = str(pair[0]) + ", " + str(pair[1])
+    locations.append(test)
+    #locations.append(pair[0])
+    #locations.append(pair[1])
+#locations.append(coord[0])
+#locations.append(coord[1])
+
+
+#print locations
+#print len(locations)
+url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
+mapquest_response = requests.get(url).json()
+print mapquest_response
+print url
+>>>>>>> 92103c98200dec4b9c9233e9057eb5b38265e0f3
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
@@ -49,8 +103,14 @@ def dashboard():
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
 
 
-# @app.route('/_request_route')
-# def request_route():
+@app.route('/_get_arrival_time')
+def get_route():
+    blancoRiver = 408
+    shortPath = ()
+    longPath = tracker.route_info(blancoRiver)["path"]
+
+    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":[]}&outFormat=json&key=KEY'
+
 
 @app.errorhandler(404)
 def page_not_found(err):

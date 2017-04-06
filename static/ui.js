@@ -26,7 +26,6 @@ $( document ).ready(function() {
         $('.btn-right').css("background-color", "rgba(255,255,255,0.7)");
         $('.stop-select').hide();
         $('.distance-select').show();
-        $('#distanceInput').focus();
         $('.alert-select').hide();
     });
 
