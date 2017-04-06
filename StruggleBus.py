@@ -18,8 +18,6 @@ ask = Ask(app, "/")
 #db_url = os.path.join(SITE_ROOT, "db.json")
 #data = json.load(open(db_url))
 
-<<<<<<< HEAD
-=======
 display = {}
 tracker = DoubleMap('txstate')
 
@@ -65,7 +63,7 @@ url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}
 mapquest_response = requests.get(url).json()
 print mapquest_response
 print url
->>>>>>> 92103c98200dec4b9c9233e9057eb5b38265e0f3
+
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
