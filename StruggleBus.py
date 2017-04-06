@@ -10,9 +10,9 @@ import os
 app = Flask(__name__)
 
 # Load database into data variable
-SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-db_url = os.path.join(SITE_ROOT, "db.json")
-data = json.load(open(db_url))
+#SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+#db_url = os.path.join(SITE_ROOT, "db.json")
+#data = json.load(open(db_url))
 
 display = {}
 tracker = DoubleMap('txstate')
@@ -39,18 +39,23 @@ endLocationIndex = pairs.index(lastPair)
 # this isn't right
 skip = (endLocationIndex/23)
 
-
 count = 0
-locations = [pairs[0]]
+locations = []
+#locations = [pairs[0][0]]
+#locations.append(pairs[0][1])
 
-for pair in pairs[1:endLocationIndex:5]:
-    locations.append(pair)
-locations.append(coord)
+for pair in pairs[0:endLocationIndex:4]:
+    test = str(pair[0]) + ", " + str(pair[1])
+    locations.append(test)
+    #locations.append(pair[0])
+    #locations.append(pair[1])
+#locations.append(coord[0])
+#locations.append(coord[1])
 
 
-print locations
-print len(locations)
-url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":[%s]}&outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % ''.join(map(str, locations))
+#print locations
+#print len(locations)
+url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
 mapquest_response = requests.get(url).json()
 print mapquest_response
 print url
