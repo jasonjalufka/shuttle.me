@@ -1,8 +1,9 @@
-from flask import Flask, render_template, json
+from flask import Flask, render_template
 import flask
 from doublemap import DoubleMap
 from flask_ask import Ask, request, statement, question, session
 import logging
+import json
 import os
 
 
@@ -10,15 +11,30 @@ app = Flask(__name__)
 ask = Ask(app, "/")
 tracker = DoubleMap('txstate')
 
-logging.getLogger('flask_ask').setLevel(logging.DEBUG)
-
 display = {}
-#settings = dict.fromkeys(['audio','visual'])
+db = {}
 
 
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
+
+db['stops'] = []
+
+for stopKey, stopValue in tracker.stops.iteritems():
+    #store stop ID's and stop names in JSON format in db.json
+    db['stops'].append({
+        'stopID': stopKey,
+        'stopName': stopValue["name"]
+    })
+
+    with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json", "wb") as fo:
+        json.dump(db, fo, indent=4)
+
+    with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json") as json_file:
+        data = json.load(json_file)
+        for key in db['stops']:
+            print("STOP NAME: " + key['stopName']) + ("\tSTOP ID: " + (str(key['stopID'])))
 
 @app.route('/')
 def index():
@@ -26,14 +42,13 @@ def index():
     current = len(tracker.buses)
     print current
 
-    file = open('db.txt', 'w')
-    file.write('This is a test\n')
-
     # return flask.render_template("configure.html", data=display)
     return flask.render_template("index.html", current=current)
 
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
+    db['prefs'] = []
+
     if flask.request.method == 'POST':
         print "Configuration Info:"
         stop = flask.request.form['bus-stops']
@@ -48,6 +63,16 @@ def configure():
             visual = True
         else:
             visual = False
+
+        db['prefs'].append({
+            'audio': audio,
+            'visual': visual,
+            'stop': stop,
+            'distance': distance
+        })
+
+        with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json", "wb") as fo:
+            json.dump(db, fo, indent=4)
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
@@ -80,8 +105,9 @@ def page_not_found(err):
 
 @ask.launch
 def start_skill():
+    current = len(tracker.buses)
     question_text = render_template('welcome')
-    return question(question_text)
+    return question("There are " + str(current) + " busses running at the moment" + question_text)
 
 
 #navigation for yes or no. 'Intent' is input from user
@@ -94,7 +120,7 @@ def start_skill():
 
 @ask.intent("YesIntent")
 def yes_intent():
-    current = "your current stop is " + tracker.stops[int(11)]["name"]
+    current = "your current stop is " + tracker.stops[int()]["name"]
     return statement(current)
 
 
@@ -119,3 +145,4 @@ def session_ended():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    logging.getLogger('flask_ask').setLevel(logging.DEBUG)
