@@ -1,0 +1,14 @@
+html {
+    background-color: #044F67;
+    /*background-image: url("images/background.jpg");*/
+    background-size: cover;
+}
+
+body {
+    color: white;
+    text-align: center;
+}
+
+#timer {
+
+}

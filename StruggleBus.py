@@ -19,50 +19,9 @@ ask = Ask(app, "/")
 #data = json.load(open(db_url))
 
 display = {}
+preferences = {}
 tracker = DoubleMap('txstate')
 
-
-# IGNORE THIS SECTION IT WILL BE MOVED LATER!!!!
-stopLat = tracker.stop_info(38)["lat"]
-stopLon = tracker.stop_info(38)["lon"]
-
-fullPath = tracker.route_info(408)["path"]
-
-# separate fullPath into coordinate lat, lon pairs
-pairs = zip(fullPath[::2], fullPath[1::2])
-
-# find coordinate closest to stop coordinate in route
-dist = lambda s, d: (s[0]-d[0])**2+(s[1]-d[1])**2
-coord = (stopLat, stopLon)
-lastPair = min(pairs, key=partial(dist, coord))
-
-# index of closest coordinate to stop
-# tells us last coordinate to load
-endLocationIndex = pairs.index(lastPair)
-
-# this isn't right
-skip = (endLocationIndex/23)
-
-count = 0
-locations = []
-#locations = [pairs[0][0]]
-#locations.append(pairs[0][1])
-
-for pair in pairs[0:endLocationIndex:4]:
-    test = str(pair[0]) + ", " + str(pair[1])
-    locations.append(test)
-    #locations.append(pair[0])
-    #locations.append(pair[1])
-#locations.append(coord[0])
-#locations.append(coord[1])
-
-
-#print locations
-#print len(locations)
-url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
-mapquest_response = requests.get(url).json()
-print mapquest_response
-print url
 
 for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
@@ -83,8 +42,10 @@ def configure():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if flask.request.method == 'POST':
-        print "Configuration Info:"
+
         stop = flask.request.form['bus-stops']
+        route = tracker.get_route(int(stop))
+        buses = get_buses(route)
         distance = flask.request.form['distance']
         toggles = flask.request.form.getlist('check')
         if 'audio' in toggles:
@@ -97,17 +58,79 @@ def dashboard():
         else:
             visual = False
 
+        information = {'stop': stop, 'route': route, 'distance': distance, 'audio': audio, 'visual': visual, 'buses': buses}
+        preferences.update(information)
+
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
-                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"])
+                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],\
+                                     route=tracker.routes[int(route)]["name"], bus_info=buses)
+
+def get_buses(route):
+    buses = []
+
+    for busKey, busValue in tracker.buses.iteritems():
+        if busValue["route"] == route:
+            buses.append(busValue["name"])
+    return buses
 
 
-@app.route('/_get_arrival_time')
+@app.route('/_get_arrival_time', methods=['GET'])
 def get_route():
-    blancoRiver = 408
-    shortPath = ()
-    longPath = tracker.route_info(blancoRiver)["path"]
 
-    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":[]}&outFormat=json&key=KEY'
+    print "IN GET ARRIVAL TIME AJAX THING"
+
+    print len(preferences["buses"])
+    print preferences["buses"][0]
+    stop = preferences.get("stop")
+    print stop
+    route = preferences.get("route")
+    print route
+    stopLat = tracker.stop_info(int(stop))["lat"]
+    print stopLat
+    stopLon = tracker.stop_info(int(stop))["lon"]
+    print stopLon
+
+    fullPath = tracker.route_info(route)["path"]
+
+    # separate fullPath into coordinate lat, lon pairs
+    pairs = zip(fullPath[::2], fullPath[1::2])
+
+    # find coordinate closest to stop coordinate in route
+    dist = lambda s, d: (s[0] - d[0]) ** 2 + (s[1] - d[1]) ** 2
+    coord = (stopLat, stopLon)
+    lastPair = min(pairs, key=partial(dist, coord))
+
+    # index of closest coordinate to stop
+    # tells us last coordinate to load
+    endLocationIndex = pairs.index(lastPair)
+    print "ENDLOCATIONINDEX"
+    print endLocationIndex
+    # this isn't right
+    skip = (endLocationIndex / 23)
+    print "SKIP"
+    print skip
+    count = 0
+    locations = []
+
+    for pair in pairs[0:endLocationIndex:4]:
+        test = str(pair[0]) + ", " + str(pair[1])
+        locations.append(test)
+    print "LOCATIONS LENGTH"
+    print len(locations)
+
+    locations.pop(8)
+    locations.pop(9)
+    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1\
+    &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
+
+    return jsonify(requests.get(url).json())
+
+    # mapquest_response = requests.get(url).json()
+
+    # print mapquest_response
+    # print url
+
+    # return jsonify(mapquest_response)
 
 
 @app.errorhandler(404)

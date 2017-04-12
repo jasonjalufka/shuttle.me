@@ -1,23 +1,39 @@
 {% extends 'base.html' %}
 {% block title %}dashboard{% endblock %}
+{% block CSS %}<link rel="stylesheet" href="{{ url_for('static', filename='temp.css') }}">{% endblock %}
 {% block scripts %}
     <script type="text/javascript">var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
-    <script src="{{ url_for('static', filename='update.js') }}"></script>
+    <script src="{{ url_for('static', filename='countdown.js') }}"></script>
 {% endblock %}
 {% block content %}
+    <h1>{{ route }}</h1>
 <div class="section header">
     <div class="container">
         <div class="row">
-            <h1>Dashboard - {{ name }}</h1>
+            <h4>Dashboard - {{ name }}</h4>
             <h4><a href="http://maps.google.com/?q={{ lat }},{{ lon }}">{{ name }}</a></h4>
+            <h4><button id="calculate">Calculate departure time</button></h4>
         </div>
     </div>
 </div>
 <div class="section countdown">
     <div class="container">
         <div class="row">
-            <div class="six columns offset-by-three" style="background-color: red;">
-                <p>this is where the timer might go</p>
+            <div id="timer" class="six columns offset-by-three" style="background-color: white;">
+                <script type="text/javascript">
+{#                window.onload = CreateTimer("timer", 120);#}
+                $("button").click(function(){
+                    alert({{ bus_info|tojson }})
+                    $.getJSON($SCRIPT_ROOT + '_get_arrival_time',
+                        function(data){
+                        alert("Data: " + data['route']['formattedTime'])
+                        CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));
+                    });
+                });
+                </script>
+
+                <h1 id="data">poop</h1>
+
             </div>
 
         </div>

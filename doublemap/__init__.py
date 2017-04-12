@@ -24,6 +24,14 @@ class DoubleMap(object):
         """ Get information about a specific stop id. """
         return self.stops[stop_id]
 
+    def get_route(tracker, stop_id):
+        """ Find the user's route """
+        possible_routes = set()
+        for route_id, route in tracker.routes.iteritems():
+            if stop_id in route['stops']:
+                return route_id
+
+
     def eta(self, stop_id, route_id):
         """ Get eta (in minutes) about a specific stop id and route_id. """
         etas_url = self.__domain + "/eta?stop=" + str(stop_id)
