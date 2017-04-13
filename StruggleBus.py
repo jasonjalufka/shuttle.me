@@ -19,22 +19,22 @@ for stopKey, stopValue in tracker.stops.iteritems():
     display.update({stopKey: stopValue["name"]})
 
 
-db['stops'] = []
+db['stops'] = {}
+db['configuration'] = {}
+db['configuration'].update({"isConfigured": False})
 
 for stopKey, stopValue in tracker.stops.iteritems():
     #store stop ID's and stop names in JSON format in db.json
-    db['stops'].append({
-        'stopID': stopKey,
-        'stopName': stopValue["name"]
+    db['stops'].update({
+        stopKey: stopValue["name"]
     })
-
-    with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json", "wb") as fo:
+    resource_path = os.path.join(app.root_path, 'db.json')
+    with open(resource_path, "wb") as fo:
         json.dump(db, fo, indent=4)
 
-    with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json") as json_file:
+    with open(resource_path) as json_file:
         data = json.load(json_file)
-        for key in db['stops']:
-            print("STOP NAME: " + key['stopName']) + ("\tSTOP ID: " + (str(key['stopID'])))
+
 
 @app.route('/')
 def index():
@@ -47,7 +47,7 @@ def index():
 
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
-    db['prefs'] = []
+    db['prefs'] = {}
 
     if flask.request.method == 'POST':
         print "Configuration Info:"
@@ -64,14 +64,15 @@ def configure():
         else:
             visual = False
 
-        db['prefs'].append({
+        db['prefs'].update({
             'audio': audio,
             'visual': visual,
             'stop': stop,
             'distance': distance
         })
+        db['configuration'].update({"isConfigured": True})
 
-        with open("/Users/ryanjalufka/PycharmProjects/strugglebus/db.json", "wb") as fo:
+        with open(resource_path, "wb") as fo:
             json.dump(db, fo, indent=4)
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
@@ -102,7 +103,6 @@ def page_not_found(err):
 ######################################################
 
 
-
 @ask.launch
 def start_skill():
     current = len(tracker.buses)
@@ -120,21 +120,30 @@ def start_skill():
 
 @ask.intent("YesIntent")
 def yes_intent():
-    current = "your current stop is " + tracker.stops[int()]["name"]
+    current = "your current stop is "
     return statement(current)
 
+@ask.intent("ConfigurationInfoIntent")
+def configuration_info_intent():
+    if db['configuration'].get('isConfigured') == True:
+        if db['prefs']['audio'] == True:
+            audioToggle = "audio toggle is on"
+        else:
+            audioToggle = "audio toggle is off"
 
-@ask.intent("BusQuantityIntent")
-def bus_quantity_intent():
-    current = len(tracker.buses)
-    return statement("There are " + str(current) + " busses running at the moment")
+        if db['prefs']['visual'] == True:
+            visualToggle = "visual toggle is on"
+        else:
+            visualToggle = "visual toggle is off"
 
-
-@ask.intent("BusIDIntent")
-def bus_ID_intent():
-    bus_message = "Which bus number's ETA would you like?"
-    return question(bus_message)
-
+        stopNum = db['prefs']['stop']
+        currentDistance = db['prefs']['distance']  # how to access the db.json elements
+        currentStop = db['stops'][int(stopNum)]
+        return statement("Current stop is set to " + currentStop +
+                         "...Current distance is set to " + currentDistance + " minutes..." +
+                         audioToggle + ",and" + visualToggle)
+    else:
+        return statement("Configure first, then come back")
 
 @ask.session_ended
 def session_ended():
