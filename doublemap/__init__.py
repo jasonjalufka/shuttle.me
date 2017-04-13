@@ -26,7 +26,6 @@ class DoubleMap(object):
 
     def get_route(tracker, stop_id):
         """ Find the user's route """
-        possible_routes = set()
         for route_id, route in tracker.routes.iteritems():
             if stop_id in route['stops']:
                 return route_id
