@@ -45,7 +45,7 @@ def dashboard():
         information = {'stop': stop, 'route': route, 'distance': distance, 'audio': audio, 'visual': visual, 'buses': buses}
         preferences.update(information)
 
-        return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
+        return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
                                      route=tracker.routes[int(route)]["name"], bus_info=buses)
 

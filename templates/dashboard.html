@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}dashboard{% endblock %}
-{% block CSS %}<link rel="stylesheet" href="{{ url_for('static', filename='temp.css') }}">{% endblock %}
+{% block CSS %}<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">{% endblock %}
 {% block scripts %}
     <script type="text/javascript">var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
     <script src="{{ url_for('static', filename='countdown.js') }}"></script>
