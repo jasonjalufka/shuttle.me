@@ -13,11 +13,6 @@ app = Flask(__name__)
 tracker = DoubleMap('txstate')
 ask = Ask(app, "/")
 
-# Load database into data variable
-#SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-#db_url = os.path.join(SITE_ROOT, "db.json")
-#data = json.load(open(db_url))
-
 display = {}
 preferences = {}
 tracker = DoubleMap('txstate')
@@ -42,7 +37,6 @@ def configure():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if flask.request.method == 'POST':
-
         stop = flask.request.form['bus-stops']
         route = tracker.get_route(int(stop))
         buses = get_buses(route)
@@ -62,8 +56,9 @@ def dashboard():
         preferences.update(information)
 
         return flask.render_template("temp.html", name=tracker.stops[int(stop)]["name"],
-                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],\
+                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
                                      route=tracker.routes[int(route)]["name"], bus_info=buses)
+
 
 def get_buses(route):
     buses = []
@@ -120,7 +115,7 @@ def get_route():
 
     locations.pop(8)
     locations.pop(9)
-    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1\
+    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
     &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
 
     return jsonify(requests.get(url).json())
@@ -130,7 +125,6 @@ def get_route():
     # print mapquest_response
     # print url
 
-    # return jsonify(mapquest_response)
 
 
 @app.errorhandler(404)

@@ -9,6 +9,14 @@ body {
     text-align: center;
 }
 
-#timer {
+h1 {
+    color: white;
+    text-align: center;
+}
 
+#timer {
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    color: white;
+    text-align: center;
+    border: 1px solid white;
 }
