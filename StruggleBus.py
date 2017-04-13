@@ -21,6 +21,7 @@ for stopKey, stopValue in tracker.stops.iteritems():
 
 db['stops'] = {}
 db['configuration'] = {}
+db['prefs'] = {}
 db['configuration'].update({"isConfigured": False})
 
 for stopKey, stopValue in tracker.stops.iteritems():
@@ -47,7 +48,6 @@ def index():
 
 @app.route('/configure', methods=['GET', 'POST'])
 def configure():
-    db['prefs'] = {}
 
     if flask.request.method == 'POST':
         print "Configuration Info:"
@@ -120,7 +120,7 @@ def start_skill():
 
 @ask.intent("YesIntent")
 def yes_intent():
-    current = "your current stop is "
+    current = "Never gonna give you up, never gonna let you down. Never gonna run around and desert you."
     return statement(current)
 
 @ask.intent("ConfigurationInfoIntent")
