@@ -5,9 +5,11 @@ from doublemap import DoubleMap
 display = {}
 preferences = {}
 tracker = DoubleMap('txstate')
+validStops = [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 21, 24, 25, 26, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 44]
 
 for stopKey, stopValue in tracker.stops.iteritems():
-    display.update({stopKey: stopValue["name"]})
+    if stopKey in validStops:
+        display.update({stopKey: stopValue["name"]})
 
 
 @app.route('/')
