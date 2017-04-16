@@ -1,6 +1,7 @@
 from init import app
 import flask
 from doublemap import DoubleMap
+from flask import url_for
 
 display = {}
 preferences = {}
@@ -30,6 +31,9 @@ def dashboard():
         stop = flask.request.form['bus-stops']
         route = tracker.get_route(int(stop))
         buses = get_buses(route)
+        if not route or not buses:
+            return flask.redirect(url_for('index'))
+
         distance = flask.request.form['distance']
         toggles = flask.request.form.getlist('check')
         if 'audio' in toggles:
@@ -47,7 +51,7 @@ def dashboard():
 
         return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
-                                     route=tracker.routes[int(route)]["name"], bus_info=buses)
+                                     route=tracker.routes[int(route)]["name"], bus_info=buses, info=information)
 
 
 def get_buses(route):
