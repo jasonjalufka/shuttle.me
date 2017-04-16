@@ -23,12 +23,38 @@
                 <script type="text/javascript">
 {#                window.onload = CreateTimer("timer", 120);#}
                 $("button").click(function(){
+{#                    $.ajax({#}
+{#                        type : 'POST',#}
+{#                        contentType : 'application/json',#}
+{#                        url : '/_update_preferences',#}
+{#                        dataType : 'json',#}
+{#                        data : {#}
+{#                            "stop": {{  }}#}
+{#                        }#}
+{#                    });#}
                     alert({{ bus_info|tojson }})
-                    $.getJSON($SCRIPT_ROOT + '_get_arrival_time',
-                        function(data){
-                        alert("Data: " + data['route']['formattedTime'])
-                        CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));
+                    $.getJSON('')
+                    $.ajax({
+                        type : 'GET',
+                        contentType : 'application/json',
+                        url : $SCRIPT_ROOT + '_get_arrival_time',
+                        dataType : 'json',
+                        data : { buses: {{ bus_info|tojson }} },
+                        success : function(data){
+                            alert("Data: " + data['route']['formattedTime']);
+                            CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));
+                        },error : function(data){
+                            console.log(data);
+
+                        }
                     });
+{#                    $.getJSON($SCRIPT_ROOT + '_get_arrival_time', {#}
+{#                        buses: {{ bus_info|tojson }}#}
+{#                        },#}
+{#                        function(data){#}
+{#                        alert("Data: " + data['route']['formattedTime'])#}
+{#                        CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));#}
+{#                    })#}
                 });
                 </script>
 
