@@ -1,30 +1,58 @@
 from views import tracker, preferences
-from flask import jsonify, request
+from flask import jsonify, request, redirect, url_for
+import flask
 from math import ceil
 import requests
 from functools import partial
 from init import app
 
+@app.route('/_update_preferences', methods=['POST'])
+def update_preferences():
+    data = request.get_json()
 
-@app.route('/_get_arrival_time', methods=['GET'])
+@app.route('/_get_arrival_time', methods=['GET', 'POST'])
 def get_route():
 
     locations = []
 
-    # buses = request.args.get('buses')
-    # print buses[0]
+    # buses = request.args.get(b)
 
-    print len(preferences["buses"])
-    print preferences["buses"][0]
+    buses = request.args.getlist('buses[]')
+    print len(buses)
+    print buses[0]
+
     stop = preferences.get("stop")
-
+    print "STOP"
+    print stop
     route = preferences.get("route")
+    print route
+
+    stops_on_route = []
+    for stopID in tracker.route_info(route)["stops"]:
+        stops_on_route.append(stopID)
+
+    print stops_on_route
+
+    # Stores stop ID's that occur before user's stop
+    validLastStops = []
+    for stopID in stops_on_route:
+        if int(stopID) == int(stop):
+            break
+        else:
+            validLastStops.append(stopID)
+
+    print "VALID STOPS"
+    print validLastStops
+
+
 
     start = tracker.route_info(route)["stops"][0]
-
-    startLat = tracker.stop_info(start)["lat"]
+    print start
+    startLat = tracker.stop_info(int(start))["lat"]
+    print startLat
 
     startLon = tracker.stop_info(int(start))["lon"]
+    print startLon
 
     stopLat = tracker.stop_info(int(stop))["lat"]
 
@@ -40,15 +68,20 @@ def get_route():
 
     # find coordinate closest to stop coordinate in route
     dist = lambda s, d: (s[0] - d[0]) ** 2 + (s[1] - d[1]) ** 2
-    coord = (stopLat, stopLon)
-    lastPair = min(pairs, key=partial(dist, coord))
+    startCoord = (startLat, startLon)
+    stopCoord = (stopLat, stopLon)
+    firstPair = min(pairs, key=partial(dist, startCoord))
+    lastPair = min(pairs, key=partial(dist, stopCoord))
 
     # index of closest coordinate to stop
     # tells us last coordinate to load
+    startLocationIndex = pairs.index(firstPair)
+    print startLocationIndex
     endLocationIndex = pairs.index(lastPair)
-
+    print endLocationIndex
     print "TakeSpread:"
-    locationGenerator = takespread(range(1, len(pairs)-1), 23)
+    locationGenerator = takespread(range(startLocationIndex-endLocationIndex), 23)
+    # locationGenerator = takespread(range(1, len(pairs)-1), 23)
     for i in locationGenerator:
         test = str(pairs[i][0]) + ", " + str(pairs[i][1])
         locations.append(test)
@@ -59,12 +92,15 @@ def get_route():
     locations.insert(0, str(startLat) + ", " + str(startLon))
     # locations.insert(str(pairs[endLocationIndex][0]) + ", " + str(pairs[endLocationIndex][1]))
 
+    print locations[0]
     print locations
 
     url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
     &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
 
     response = requests.get(url).json()
+    print response
+        # return flask.redirect(url_for('/'))
     return jsonify(response)
 
 # choose num elements from sequence distributed as evenly as possible
