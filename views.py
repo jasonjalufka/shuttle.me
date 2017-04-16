@@ -2,9 +2,11 @@ from init import app
 import flask
 from doublemap import DoubleMap
 from flask import url_for
+import json, os
 
 display = {}
 preferences = {}
+preferences['configuration'] = {'isConfigured': False}
 tracker = DoubleMap('txstate')
 validStops = [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 21, 24, 25, 26, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 44]
 
@@ -12,6 +14,13 @@ for stopKey, stopValue in tracker.stops.iteritems():
     if stopKey in validStops:
         display.update({stopKey: stopValue["name"]})
 
+
+resource_path = os.path.join(app.root_path, 'display.json')
+with open(resource_path, "wb") as fo:
+    json.dump(display, fo, indent=4)
+
+with open(resource_path) as json_file:
+    data = json.load(json_file)
 
 @app.route('/')
 def index():
@@ -46,8 +55,18 @@ def dashboard():
         else:
             visual = False
 
-        information = {'stop': stop, 'route': route, 'distance': distance, 'audio': audio, 'visual': visual, 'buses': buses}
+
+
+        information = {'stop': stop, 'route': route, 'distance': distance, 'audio': audio, 'visual': visual, 'buses': [buses]}
         preferences.update(information)
+        preferences['configuration'] = {'isConfigured': True}
+
+        resource_path = os.path.join(app.root_path, 'prefs.json')
+        with open(resource_path, "wb") as fo:
+            json.dump(preferences, fo, indent=4)
+
+        with open(resource_path) as json_file:
+            data = json.load(json_file)
 
         return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
