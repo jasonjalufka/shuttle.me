@@ -4,6 +4,7 @@ from doublemap import DoubleMap
 from flask import url_for
 import json, os
 
+#dictionary of stops to send to the front end
 display = {}
 preferences = {}
 preferences['configuration'] = {'isConfigured': False}
@@ -55,10 +56,12 @@ def dashboard():
         else:
             visual = False
 
-
+        #call get routestops: pass in route, stop
+        route_stops = get_routestops(route, stop)
 
         information = {'stop': stop, 'route': route, 'distance': distance, 'audio': audio, 'visual': visual, 'buses': [buses]}
         preferences.update(information)
+        preferences['route_stops'] = route_stops
         preferences['configuration'] = {'isConfigured': True}
 
         resource_path = os.path.join(app.root_path, 'prefs.json')
@@ -80,6 +83,28 @@ def get_buses(route):
         if busValue["route"] == route:
             buses.append(busValue["name"])
     return buses
+
+
+def get_routestops(route, userstop):
+    # full list of stops in route
+    stops = tracker.route_info(route)["stops"]
+
+    # this array ignores stops after user's stop
+    stopsToCheck = []
+
+    # get the length of array of stops
+    length = len(stops)
+
+    # appends campus stop first
+    stopsToCheck.append(stops[length-1])
+
+    for stop in stops:
+        stopsToCheck.append(stop)
+        # do not append stops after user stop
+        if stop == userstop:
+            break
+
+    return stopsToCheck
 
 
 @app.errorhandler(404)
