@@ -15,9 +15,10 @@ def get_route():
 
     locations = []
 
-    # buses = request.args.get(b)
-
+    #get list of running buses from ajax
     buses = request.args.getlist('buses[]')
+
+
     print len(buses)
     print buses[0]
 
@@ -27,22 +28,7 @@ def get_route():
     route = preferences.get("route")
     print route
 
-    stops_on_route = []
-    for stopID in tracker.route_info(route)["stops"]:
-        stops_on_route.append(stopID)
 
-    print stops_on_route
-
-    # Stores stop ID's that occur before user's stop
-    validLastStops = []
-    for stopID in stops_on_route:
-        if int(stopID) == int(stop):
-            break
-        else:
-            validLastStops.append(stopID)
-
-    print "VALID STOPS"
-    print validLastStops
 
 
 
