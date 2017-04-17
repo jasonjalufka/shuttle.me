@@ -37,9 +37,13 @@ function UpdateTimer() {
     var Minutes = Math.floor(Seconds / 60);
     Seconds -= Minutes * (60);
 
-    var TimeStr = ((Days > 0) ? Days + " days " : "") + LeadingZero(Hours) + ":" + LeadingZero(Minutes) + ":" + LeadingZero(Seconds)
+    var TimeStr = (LeadingZero(Minutes) + ":" + LeadingZero(Seconds))
 
-    Timer.innerHTML = TimeStr + " until you must leave";
+    if(Minutes == 5 && Seconds == 1) {
+        // make pins flash here with ajax request
+    }
+
+    Timer.innerHTML = TimeStr;
 }
 
 function LeadingZero(Time) {

@@ -4,6 +4,7 @@
 {% block scripts %}
     <script type="text/javascript">var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
     <script src="{{ url_for('static', filename='countdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='update.js') }}"></script>
 {% endblock %}
 {% block content %}
     <h1>{{ route }}</h1>
@@ -11,7 +12,6 @@
     <div class="container">
         <div class="row">
             <h4>Dashboard - {{ name }}</h4>
-            <h4><a href="http://maps.google.com/?q={{ lat }},{{ lon }}">{{ name }}</a></h4>
             <h4><button id="calculate">Calculate departure time</button></h4>
         </div>
     </div>
@@ -21,47 +21,14 @@
         <div class="row">
             <div id="timer" class="six columns offset-by-three">
                 <script type="text/javascript">
-{#                window.onload = CreateTimer("timer", 120);#}
-                $("button").click(function(){
-{#                    $.ajax({#}
-{#                        type : 'POST',#}
-{#                        contentType : 'application/json',#}
-{#                        url : '/_update_preferences',#}
-{#                        dataType : 'json',#}
-{#                        data : {#}
-{#                            "stop": {{  }}#}
-{#                        }#}
-{#                    });#}
-                    alert({{ bus_info|tojson }})
-                    $.getJSON('')
-                    $.ajax({
-                        type : 'GET',
-                        contentType : 'application/json',
-                        url : $SCRIPT_ROOT + '_get_arrival_time',
-                        dataType : 'json',
-                        data : { buses: {{ bus_info|tojson }} },
-                        success : function(data){
-                            alert("Data: " + data['route']['formattedTime']);
-                            CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));
-                        },error : function(data){
-                            console.log(data);
-
-                        }
+                    $(window).load(function(){
+                        setInterval(updateTimer({{ bus_info }}), 60000)
+                        setInterval(timeLeft(), 30000)
                     });
-{#                    $.getJSON($SCRIPT_ROOT + '_get_arrival_time', {#}
-{#                        buses: {{ bus_info|tojson }}#}
-{#                        },#}
-{#                        function(data){#}
-{#                        alert("Data: " + data['route']['formattedTime'])#}
-{#                        CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0));#}
-{#                    })#}
-                });
                 </script>
-
-                <h1 id="data">poop</h1>
-
             </div>
-
+            <div id="nobuses" class="six columns offset-by-three">
+            </div>
         </div>
     </div>
 </div>
