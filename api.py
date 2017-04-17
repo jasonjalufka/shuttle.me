@@ -21,31 +21,24 @@ def get_route():
     if not closest_bus:
         abort(401)
     else:
+        # we have a bus coming!
 
         locations = []
 
-        print len(buses)
-        print buses[0]
-
         stop = preferences.get("stop")
-        print "STOP"
-        print stop
         route = preferences.get("route")
-        print route
 
+        # get bus lat and lon
 
-        start = tracker.route_info(route)["stops"][0]
-        print start
-        startLat = tracker.stop_info(int(start))["lat"]
+        startLat = tracker.bus_info(closest_bus["id"])["lat"]
         print startLat
 
-        startLon = tracker.stop_info(int(start))["lon"]
+        startLon = tracker.bus_info((closest_bus["id"]["lon"]))
         print startLon
 
+        # last stop lat lon
         stopLat = tracker.stop_info(int(stop))["lat"]
-
         stopLon = tracker.stop_info(int(stop))["lon"]
-        print stopLon
 
         fullPath = tracker.route_info(route)["path"]
 
@@ -68,7 +61,7 @@ def get_route():
         endLocationIndex = pairs.index(lastPair)
         print endLocationIndex
         print "TakeSpread:"
-        locationGenerator = takespread(range(startLocationIndex-endLocationIndex), 23)
+        locationGenerator = takespread(range(startLocationIndex,endLocationIndex), 23)
         # locationGenerator = takespread(range(1, len(pairs)-1), 23)
         for i in locationGenerator:
             test = str(pairs[i][0]) + ", " + str(pairs[i][1])
@@ -105,7 +98,7 @@ def get_closest_bus(buses):
     bus_coming = False
 
     if closest_bus:
-        closest_bus["last_stop"] = tracker.bus_info(closest_bus.keys[0])["laststop"]
+        closest_bus["last_stop"] = tracker.bus_info(closest_bus["id"])["laststop"]
         if closest_bus["last_stop"] not in preferences["route_stops"]:
             closest_bus.clear()
 
@@ -115,7 +108,7 @@ def get_closest_bus(buses):
         if last_stop in preferences["route_stops"]:
             bus_coming = True
             index = preferences["route_stops"].index(last_stop)
-            bus_obj = {bus: {"last_stop": last_stop, "index": index}}
+            bus_obj = {bus: {"last_stop": last_stop, "index": index, "id":bus}}
             bus_info.update(bus_obj)
 
     # there is a bus somewhere at UAC through user stop
