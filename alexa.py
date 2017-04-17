@@ -2,14 +2,22 @@ from init import ask, app
 from flask import Flask, render_template
 from flask_ask import Ask, request, statement, question, session
 from views import tracker, preferences, display
+from init import app
 import json, os
 
 
+#current number of shuttles running
+current = len(tracker.buses)
+
 @ask.launch
 def start_skill():
-    current = len(tracker.buses)
-    question_text = "What would you like me to do?"
-    return question("There are " + str(current) + " busses running at the moment" + question_text)
+    if preferences['configuration'].get('isConfigured') == True:
+        welcome = "Welcome to Shuttle Me..."
+        question_text = "What would you like me to do?"
+        return question(welcome + "There are " + str(current) + "buses running at the moment..." + question_text)
+    else:
+        return statement("Configure your settings first so I can get your bus information.")
+
 
 
 #navigation for yes or no. 'Intent' is input from user
@@ -17,13 +25,19 @@ def start_skill():
 #@ask.intent("StopsIntent")
 #def stops
 
-#if json file is populated, do questions. if not, ask user to say a specific route.
-#maybe use session.attributes to keep data relevant for the current user.
+#if prefs.json file is configured, do questions. if not, ask user to configure on webpage...
 
 @ask.intent("YesIntent")
 def yes_intent():
-    current = "Never gonna give you up, never gonna let you down. Never gonna run around and desert you."
-    return statement(current)
+    message = "ok"
+    return statement(message)
+
+@ask.intent("BusQuantityIntent")
+def bus_quantity_intent():
+    len(preferences["buses"]) #need to get the number of buses running on current selected route
+#    preferences[len('buses')]
+    message = "There are " + str(current) + " buses running on your route at the moment..." #revert back to default func if errors.
+    return statement(message)
 
 @ask.intent("ConfigurationInfoIntent")
 def configuration_info_intent():
@@ -39,14 +53,33 @@ def configuration_info_intent():
             visualToggle = "visual toggle is off"
 
         stopNum = preferences['stop']
-        currentDistance = preferences['distance']  # how to access the db.json elements
+        currentDistance = preferences['distance']
         print ("STOPNUM: " + stopNum)
-        currentStop = display[str(stopNum)]
-        return statement("Current stop is set to " + currentStop +
-                         "...Current distance is set to " + currentDistance + " minutes..." +
-                         audioToggle + ",and" + visualToggle)
+        currentStop = display[int(stopNum)]
+        cardMessage = ("Stop: " + currentStop +
+                       "\nDistance: " + currentDistance +
+                       "    \n" + audioToggle +
+                       "    \n" + visualToggle)
+        message = ("Current stop is set at " + currentStop +
+                    "...Current distance is set to " +
+                    currentDistance + " minutes... " +
+                    audioToggle + ", and " + visualToggle)
+        return statement(message).simple_card(cardMessage)
     else:
-        return statement("Configure first, then come back")
+        return statement("Configure your settings first so I can get your bus information.")
+
+@ask.intent("SetConfigurationIntent")
+def set_configuration_intent():
+
+    return statement("SET CONFIGURATION")
+
+@ask.intent("TimeLeftIntent")
+def alert_intent():
+    timeLeft = preferences["timeLeft"]
+    if timeLeft == -1:
+        return statement("All buses are currently past your stop and heading back to campus.")
+    else:
+        return statement("The bus will be arriving in about " + timeLeft)
 
 @ask.session_ended
 def session_ended():
