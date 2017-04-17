@@ -7,6 +7,7 @@ from functools import partial
 from init import app
 
 closest_bus = {}
+closest_buses = []
 
 @app.route('/_update_preferences', methods=['POST'])
 def update_preferences():
@@ -21,7 +22,7 @@ def get_route():
     print "hitta i was able to get your data of buses"
     print buses
     get_closest_bus(buses)
-    if not closest_bus:
+    if not closest_buses:
         print "is this why"
         abort(401)
     else:
@@ -34,12 +35,15 @@ def get_route():
         route = preferences.get("route")
 
         # get bus lat and lon
+        print "closest buses!"
+        #print closest_bus["id"]
+        print closest_buses
 
-        startLat = tracker.bus_info(closest_bus["id"])["lat"]
-        print startLat
+        startLat = tracker.bus_info(int(closest_bus["id"]))["lat"]
+        #print startLat
 
-        startLon = tracker.bus_info((closest_bus["id"]["lon"]))
-        print startLon
+        startLon = tracker.bus_info(int(closest_bus["id"]))["lon"]
+        #print startLon
 
         # last stop lat lon
         stopLat = tracker.stop_info(int(stop))["lat"]
@@ -89,6 +93,7 @@ def get_route():
             # return flask.redirect(url_for('/'))
         return jsonify(response)
 
+
 # choose num elements from sequence distributed as evenly as possible
 def takespread(sequence, num):
     length = float(len(sequence))
@@ -96,11 +101,18 @@ def takespread(sequence, num):
     for i in range(num):
         yield sequence[int(ceil(i * length / num))]
 
+
 def get_closest_bus(buses):
     bus_info = {}
 
     # will change value if there's a bus soon to come
     bus_coming = False
+
+    if closest_buses:
+        for bus in closest_buses:
+            bus["last_stop"] = tracker.bus_info(bus["id"]["lastStop"])
+            if bus["last_stop"] not in preferences["route_stops"]:
+                closest_buses.remove(bus)
 
     if closest_bus:
         closest_bus["last_stop"] = tracker.bus_info(closest_bus["id"])["lastStop"]
@@ -108,30 +120,29 @@ def get_closest_bus(buses):
             closest_bus.clear()
 
     for bus in buses:
-        print "did i mess up in this for loop, "
         last_stop = tracker.bus_info(int(bus))["lastStop"]
-        print "lets see if i got this bus last stop"
         # the following will go through if the bus hasn't passed user stop
         if last_stop in preferences["route_stops"]:
             bus_coming = True
             index = preferences["route_stops"].index(last_stop)
             bus_obj = {bus: {"last_stop": last_stop, "index": index, "id":bus}}
+            #print bus_obj
             bus_info.update(bus_obj)
+
+            closest_buses.append(bus_obj)
 
     # there is a bus somewhere at UAC through user stop
     if bus_coming:
         # there was a previous closest_bus
         if not closest_bus:
             # assign the first bus as the closest bus
-            print bus_info.keys()
-            print bus_info[bus_info.keys()[0]]
             closest_bus.update(bus_info[bus_info.keys()[0]])
-            for bus in bus_info:
+            for key, bus in bus_info.iteritems():
                 if closest_bus["index"] < bus["index"]:
                     closest_bus.clear()
                     closest_bus.update(bus)
-                    print closest_bus
-    print closest_bus
+                    #print closest_bus
+    #print closest_bus
     return
 
 
