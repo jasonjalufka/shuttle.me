@@ -99,11 +99,10 @@ def get_routestops(route, userstop):
     stopsToCheck.append(stops[length-1])
 
     for stop in stops:
-        stopsToCheck.append(stop)
         # do not append stops after user stop
         if stop == userstop:
             break
-
+        stopsToCheck.append(stop)
     return stopsToCheck
 
 
