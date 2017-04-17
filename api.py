@@ -14,14 +14,19 @@ def update_preferences():
 
 @app.route('/_get_arrival_time', methods=['GET', 'POST'])
 def get_route():
+    print "hitta i made it to get arrival time"
 
     #get list of running buses from ajax
     buses = request.args.getlist('buses[]')
-
+    print "hitta i was able to get your data of buses"
+    print buses
+    get_closest_bus(buses)
     if not closest_bus:
+        print "is this why"
         abort(401)
     else:
         # we have a bus coming!
+        print "we have a bus coming!"
 
         locations = []
 
@@ -98,12 +103,14 @@ def get_closest_bus(buses):
     bus_coming = False
 
     if closest_bus:
-        closest_bus["last_stop"] = tracker.bus_info(closest_bus["id"])["laststop"]
+        closest_bus["last_stop"] = tracker.bus_info(closest_bus["id"])["lastStop"]
         if closest_bus["last_stop"] not in preferences["route_stops"]:
             closest_bus.clear()
 
     for bus in buses:
-        last_stop = tracker.bus_info(bus)["laststop"]
+        print "did i mess up in this for loop, "
+        last_stop = tracker.bus_info(int(bus))["lastStop"]
+        print "lets see if i got this bus last stop"
         # the following will go through if the bus hasn't passed user stop
         if last_stop in preferences["route_stops"]:
             bus_coming = True
@@ -116,12 +123,15 @@ def get_closest_bus(buses):
         # there was a previous closest_bus
         if not closest_bus:
             # assign the first bus as the closest bus
-            closest_bus.update(bus_info[bus_info.keys[0]])
+            print bus_info.keys()
+            print bus_info[bus_info.keys()[0]]
+            closest_bus.update(bus_info[bus_info.keys()[0]])
             for bus in bus_info:
-                if closest_bus["last_stop"] < bus["last_stop"]:
+                if closest_bus["index"] < bus["index"]:
                     closest_bus.clear()
                     closest_bus.update(bus)
-
+                    print closest_bus
+    print closest_bus
     return
 
 
