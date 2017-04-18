@@ -41,8 +41,8 @@ def dashboard():
         stop = flask.request.form['bus-stops']
         route = tracker.get_route(int(stop))
         buses = get_buses(route)
-        if not route or not buses:
-            return flask.redirect(url_for('index'))
+#        if not route or not buses:
+#            return flask.redirect(url_for('index'))
 
         distance = flask.request.form['distance']
         toggles = flask.request.form.getlist('check')
