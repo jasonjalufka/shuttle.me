@@ -17,28 +17,22 @@ def update_preferences():
 
 @app.route('/_get_arrival_time', methods=['GET'])
 def get_route():
-    print "called in get arrival time"
     del closest_buses[:]
 
     #get list of running buses from ajax
     buses = request.args.getlist('buses[]')
-    print "was i able to get the buses?"
     bus_on_way = get_closest_bus(buses)
+    
     #bus_on_way = False
-    print "did this getclosestbus function upset it?"
     if not bus_on_way:
-        print "is this why"
         return "error"
     else:
         # we have a bus coming!
-        print "we have a bus coming!"
         stop = preferences.get("stop")
         route = preferences.get("route")
 
         response = {}
         # get bus lat and lon
-        print "closest buses!"
-        print closest_buses
 
         response["number"]=len(closest_buses)
 
@@ -46,7 +40,6 @@ def get_route():
             bus["formattedTime"] = get_eta(bus)
 
         response["buses"] = closest_buses
-        print response
 
         return jsonify(response)
 
@@ -54,7 +47,6 @@ def get_route():
 # function that gets the ETA for each bus heading your way
 
 def get_eta(bus):
-    print bus
     stopLat = tracker.stop_info(int(preferences.get("stop")))["lat"]
     stopLon = tracker.stop_info(int(preferences.get("stop")))["lon"]
     fullPath = tracker.route_info(preferences["route"])["path"]
@@ -70,47 +62,33 @@ def get_eta(bus):
     stopCoord = (stopLat, stopLon)
     lastPair = min(pairs, key=partial(dist, stopCoord))
     endLocationIndex = pairs.index(lastPair)
-    print "startCord"
-    print startCoord
+
     firstPair = min(pairs, key=partial(dist, startCoord))
-    print "first pair"
-    print firstPair
 
     startLocationIndex = pairs.index(firstPair)
-    print "indices"
-    print startLocationIndex
-    print endLocationIndex
 
     if startLocationIndex > endLocationIndex:
         return -1
     else:
         # check to see the range before trying to split it up
         if (endLocationIndex - startLocationIndex) < 25:
-            print "im pretty close"
             # do this
             for i in range(startLocationIndex, endLocationIndex):
                 test = str(pairs[i][0]) + ", " + str(pairs[i][1])
                 locations.append(test)
         else:
-            print "i'm pretty far"
             locationGenerator = takespread(range(startLocationIndex, endLocationIndex), 23)
             for i in locationGenerator:
                 test = str(pairs[i][0]) + ", " + str(pairs[i][1])
                 locations.append(test)
             locations.append(str(stopLat) + ", " + str(stopLon))
             locations.insert(0, str(startLat) + ", " + str(startLon))
-        print "location length"
-        print len(locations)
-        print locations
+
         url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
                 &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
 
-        print "URL"
-        print url
         urlresponse = requests.get(url).json()
-        print "url response"
-        print urlresponse
-        print urlresponse["route"]["formattedTime"]
+
         return urlresponse["route"]["formattedTime"]
 
 
@@ -146,7 +124,6 @@ def get_closest_bus(buses):
             bus_coming = True
             index = preferences["route_stops"].index(last_stop)
             bus_obj = {bus: {"last_stop": last_stop, "index": index, "id":bus}}
-            #print bus_obj
             bus_info.update(bus_obj)
 
             closest_buses.append(bus_obj[bus])
