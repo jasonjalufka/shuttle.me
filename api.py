@@ -15,7 +15,7 @@ closest_buses = []
 def update_preferences():
     data = request.get_json()
 
-@app.route('/_get_arrival_time', methods=['GET', 'POST'])
+@app.route('/_get_arrival_time', methods=['GET'])
 def get_route():
     print "called in get arrival time"
     del closest_buses[:]
@@ -23,8 +23,8 @@ def get_route():
     #get list of running buses from ajax
     buses = request.args.getlist('buses[]')
     print "was i able to get the buses?"
-    #bus_on_way = get_closest_bus(buses)
-    bus_on_way = False
+    bus_on_way = get_closest_bus(buses)
+    #bus_on_way = False
     print "did this getclosestbus function upset it?"
     if not bus_on_way:
         print "is this why"
@@ -48,7 +48,7 @@ def get_route():
         response["buses"] = closest_buses
         print response
 
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+        return jsonify(response)
 
 
 # function that gets the ETA for each bus heading your way
@@ -78,6 +78,9 @@ def get_eta(bus):
 
     startLocationIndex = pairs.index(firstPair)
     endLocationIndex = pairs.index(lastPair)
+    print "indices"
+    print startLocationIndex
+    print endLocationIndex
 
     # check to see the range before trying to split it up
     if (endLocationIndex - startLocationIndex) < 25:
