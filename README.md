@@ -1,7 +1,7 @@
-DoubleMap API Client
+Shuttle.me - Texas State Alert System
 ====================
 
-
+Shuttle.me is designed to make your day easier and keep you on time.
 This library helps you to pull data from DoubleMap.
 Included is a command line utility for determining when buses will arrive and which one to get on.
 
@@ -30,10 +30,3 @@ Usage
 >>> # retrieve info about route 23
 >>> tracker.route_info(23)
 ```
-
-
-Command Line Utility
---------------------
-Included is a command line utility for accessing bus route information, which can be run after installing the package:
-
-    $ doublemap
