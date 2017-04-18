@@ -19,7 +19,6 @@ def start_skill():
         return statement("Configure your settings first so I can get your bus information.")
 
 
-
 #navigation for yes or no. 'Intent' is input from user
 #utterance is the way that user says the intent
 #@ask.intent("StopsIntent")
@@ -32,12 +31,14 @@ def yes_intent():
     message = "ok"
     return statement(message)
 
+
 @ask.intent("BusQuantityIntent")
 def bus_quantity_intent():
     len(preferences["buses"]) #need to get the number of buses running on current selected route
 #    preferences[len('buses')]
     message = "There are " + str(current) + " buses running on your route at the moment..." #revert back to default func if errors.
     return statement(message)
+
 
 @ask.intent("ConfigurationInfoIntent")
 def configuration_info_intent():
@@ -66,12 +67,56 @@ def configuration_info_intent():
                     audioToggle + ", and " + visualToggle)
         return statement(message).simple_card(cardMessage)
     else:
-        return statement("Configure your settings first so I can get your bus information.")
+        return statement("Configure all your settings first on the shuttle me configuration portal.")
 
-@ask.intent("SetConfigurationIntent")
-def set_configuration_intent():
 
-    return statement("SET CONFIGURATION")
+@ask.intent("AudioOffIntent")
+def audio_off_intent():
+    if preferences['configuration'].get('isConfigured') == True:
+        if preferences['audio'] == False:
+            return statement("Audio toggle is already deactivated...")
+        else:
+            preferences['audio'] = False
+            return statement("Audio toggle has been deactivated...")
+    else:
+        return statement("Configure all your settings first on the shuttle me configuration portal.")
+
+
+@ask.intent("AudioOnIntent")
+def audio_on_intent():
+    if preferences['configuration'].get('isConfigured') == True:
+        if preferences['audio'] == True:
+            return statement("Audio toggle is already activated...")
+        else:
+            preferences['audio'] = True
+            return statement("Audio toggle has been activated...")
+    else:
+        return statement("Configure all your settings first in the shuttle me configuration portal.")
+
+
+@ask.intent("VisualOffIntent")
+def visual_off_intent():
+    if preferences['configuration'].get('isConfigured') == True:
+        if preferences['visual'] == False:
+            return statement("Visual toggle is already deactivated...")
+        else:
+            preferences['visual'] = False
+            return statement("Visual toggle has been deactivated...")
+    else:
+        return statement("Configure all your settings first in the shuttle me configuration portal.")
+
+
+@ask.intent("VisualOnIntent")
+def visual_on_intent():
+    if preferences['configuration'].get('isConfigured') == True:
+        if preferences['visual'] == True:
+            return statement("Visual Toggle is already activated...")
+        else:
+            preferences['visual'] = True
+            return statement("Visual toggle has been activated...")
+    else:
+        return statement("Configure all your settings first in the shuttle me configuration portal.")
+
 
 @ask.intent("TimeLeftIntent")
 def alert_intent():
@@ -79,7 +124,7 @@ def alert_intent():
     if timeLeft == -1:
         return statement("All buses are currently past your stop and heading back to campus.")
     else:
-        return statement("The bus will be arriving in about " + timeLeft)
+        return statement("The bus will be arriving in about " + timeLeft + " minutes...")
 
 @ask.session_ended
 def session_ended():
