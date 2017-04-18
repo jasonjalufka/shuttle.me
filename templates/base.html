@@ -11,6 +11,10 @@
 
     <! -- FAVICON -->
     <link rel="icon" href="../static/images/favicon.ico">
+
+    <! -- FONTAWESOME -->
+    <script src="https://use.fontawesome.com/07131dfb81.js"></script>
+
     <! -- FONT -->
     <link href='https://fonts.googleapis.com/css?family=Sansita' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
@@ -23,7 +27,7 @@
     <! -- SCRIPTS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     {% block scripts %}{% endblock %}
-    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='ui.js') }}"></script>#}
 </head>
 <body>
     {% block content %}{% endblock %}

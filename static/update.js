@@ -1,5 +1,4 @@
 function updateTimer(bus_info, distance){
-
     $.ajax({
         type : 'GET',
         contentType : 'application/json',
@@ -7,15 +6,26 @@ function updateTimer(bus_info, distance){
         dataType : 'json',
         data : { buses: bus_info},
         success : function(data){
-            console.log("Data: " + data['route']['formattedTime']);
-            $("#timer").empty();
-            CreateTimer("timer", data['route']['formattedTime'].split(':').reverse().reduce((prev, curr, i) => prev + curr*Math.pow(60, i), 0) - distance;
+            var walkingTime = distance * 60;
+            var hms, time, seconds, id;
+            for(var i = 0; i < data["number"]; i++) {
+                hms = data["buses"][i]["formattedTime"];
+                time = hms.split(':');
+                seconds = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]) - walkingTime;
+                id = "timer" + i;
+                $('<div/>'), {
+                    'id': id,
+                    'class': 'countdown-timers'
+                };
+                $("#"+id).append("<i class='fa fa-bus' aria-hidden='true'></i>")
+                CreateTimer(id, seconds);
+            }
         }, error : function(data){
             $("#timer").empty();
-            $("#nobuses").innerHTML = "All buses are currently past your stop"
+            $("#nobuses").innerHTML = "All buses are currently past your stop";
         }
     });
-}
+};
 
 // Reads current value of timer and POSTs to server to update preferences file
 // Called every 30 seconds

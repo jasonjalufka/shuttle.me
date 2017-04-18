@@ -8,6 +8,7 @@
 {% endblock %}
 {% block content %}
     <h1>{{ route }}</h1>
+    <br>
 <div class="section header">
     <div class="container">
         <div class="row">
@@ -21,10 +22,19 @@
         <div class="row">
             <div id="timer" class="six columns offset-by-three">
                 <script type="text/javascript">
-                    $(window).load(function(){
-                        setInterval(updateTimer({{ bus_info }}), 60000)
-                        setInterval(timeLeft(), 30000)
+                    $(window).on('load', function(){
+                        console.log("Window is loaded in dashboard");
+                        setInterval(alert("hello"), 8000)
                     });
+                    $('#calculate').on('click', function(){
+                        console.log("You clicked me!");
+                        updateTimer({{ bus_info|tojson }}, {{ info.distance }});
+                    })
+{#                    $(window).load(function(){#}
+{#                        console.log("window is loaded in dashboard")#}
+{#                        setInterval(updateTimer({{ bus_info|tojson }}), 60000)#}
+{#                        setInterval(timeLeft(), 30000)#}
+{#                    });#}
                 </script>
             </div>
             <div id="nobuses" class="six columns offset-by-three">

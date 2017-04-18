@@ -73,7 +73,7 @@ def dashboard():
 
         return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
-                                     route=tracker.routes[int(route)]["name"], bus_info=buses, info=information)
+                                     route=tracker.routes[int(route)]["name"], bus_info=buses, info=preferences)
 
 
 def get_buses(route):
