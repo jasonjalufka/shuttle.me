@@ -59,6 +59,7 @@ def get_eta(bus):
     stopLon = tracker.stop_info(int(preferences.get("stop")))["lon"]
     fullPath = tracker.route_info(preferences["route"])["path"]
     pairs = zip(fullPath[::2], fullPath[1::2])
+    pairs = pairs[0:-15]
     locations = []
 
     startLat = tracker.bus_info(int(bus["id"]))["lat"]
@@ -69,7 +70,6 @@ def get_eta(bus):
     stopCoord = (stopLat, stopLon)
     lastPair = min(pairs, key=partial(dist, stopCoord))
     endLocationIndex = pairs.index(lastPair)
-    pairs = pairs[0:endLocationIndex+10]
     print "startCord"
     print startCoord
     firstPair = min(pairs, key=partial(dist, startCoord))
@@ -81,34 +81,37 @@ def get_eta(bus):
     print startLocationIndex
     print endLocationIndex
 
-    # check to see the range before trying to split it up
-    if (endLocationIndex - startLocationIndex) < 25:
-        print "im pretty close"
-        # do this
-        for i in range(startLocationIndex, endLocationIndex):
-            test = str(pairs[i][0]) + ", " + str(pairs[i][1])
-            locations.append(test)
+    if startLocationIndex > endLocationIndex:
+        return -1
     else:
-        print "i'm pretty far"
-        locationGenerator = takespread(range(startLocationIndex, endLocationIndex), 23)
-        for i in locationGenerator:
-            test = str(pairs[i][0]) + ", " + str(pairs[i][1])
-            locations.append(test)
-        locations.append(str(stopLat) + ", " + str(stopLon))
-        locations.insert(0, str(startLat) + ", " + str(startLon))
-    print "location length"
-    print len(locations)
-    print locations
-    url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
-            &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
+        # check to see the range before trying to split it up
+        if (endLocationIndex - startLocationIndex) < 25:
+            print "im pretty close"
+            # do this
+            for i in range(startLocationIndex, endLocationIndex):
+                test = str(pairs[i][0]) + ", " + str(pairs[i][1])
+                locations.append(test)
+        else:
+            print "i'm pretty far"
+            locationGenerator = takespread(range(startLocationIndex, endLocationIndex), 23)
+            for i in locationGenerator:
+                test = str(pairs[i][0]) + ", " + str(pairs[i][1])
+                locations.append(test)
+            locations.append(str(stopLat) + ", " + str(stopLon))
+            locations.insert(0, str(startLat) + ", " + str(startLon))
+        print "location length"
+        print len(locations)
+        print locations
+        url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
+                &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
 
-    print "URL"
-    print url
-    urlresponse = requests.get(url).json()
-    print "url response"
-    print urlresponse
-    print urlresponse["route"]["formattedTime"]
-    return urlresponse["route"]["formattedTime"]
+        print "URL"
+        print url
+        urlresponse = requests.get(url).json()
+        print "url response"
+        print urlresponse
+        print urlresponse["route"]["formattedTime"]
+        return urlresponse["route"]["formattedTime"]
 
 
 # choose num elements from sequence distributed as evenly as possible
