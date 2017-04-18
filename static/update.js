@@ -5,7 +5,7 @@ function updateTimer(bus_info, distance){
         url : $SCRIPT_ROOT + '_get_arrival_time',
         dataType : 'json',
         data : { buses: bus_info},
-        success : function(data){
+        success : function(success){
             var walkingTime = distance * 60;
             var hms, time, seconds, id;
             for(var i = 0; i < data["number"]; i++) {
@@ -19,11 +19,13 @@ function updateTimer(bus_info, distance){
                 };
                 $("#"+id).append("<i class='fa fa-bus' aria-hidden='true'></i>")
                 CreateTimer(id, seconds);
-            }
-        }, error : function(data){
+            };
+        }, error : function(xhr){
+            console.log("An error occurred: " + xhr.status + " " + xhr.statusText);
+            $("#nobuses").empty();
             $("#timer").empty();
-            $("#nobuses").innerHTML = "All buses are currently past your stop";
-        }
+            $("#nobuses").append("<p>All buses are currently past your stop</p>");
+            }
     });
 };
 
