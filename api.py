@@ -59,7 +59,6 @@ def get_eta(bus):
     stopLon = tracker.stop_info(int(preferences.get("stop")))["lon"]
     fullPath = tracker.route_info(preferences["route"])["path"]
     pairs = zip(fullPath[::2], fullPath[1::2])
-    pairs = pairs[0:-10]
     locations = []
 
     startLat = tracker.bus_info(int(bus["id"]))["lat"]
@@ -68,16 +67,16 @@ def get_eta(bus):
     dist = lambda s, d: (s[0] - d[0]) ** 2 + (s[1] - d[1]) ** 2
     startCoord = (startLat, startLon)
     stopCoord = (stopLat, stopLon)
-
+    lastPair = min(pairs, key=partial(dist, stopCoord))
+    endLocationIndex = pairs.index(lastPair)
+    pairs = pairs[0:endLocationIndex+10]
     print "startCord"
     print startCoord
     firstPair = min(pairs, key=partial(dist, startCoord))
     print "first pair"
     print firstPair
-    lastPair = min(pairs, key=partial(dist, stopCoord))
 
     startLocationIndex = pairs.index(firstPair)
-    endLocationIndex = pairs.index(lastPair)
     print "indices"
     print startLocationIndex
     print endLocationIndex
