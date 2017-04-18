@@ -7,40 +7,39 @@
     <script src="{{ url_for('static', filename='update.js') }}"></script>
 {% endblock %}
 {% block content %}
-    <img src=""<h1></i>{{ route }}</h1>
+    <img class="logo" src="/static/images/shuttle.png" alt="shuttle logo" style="width: 75px; height: 75px;"><h1></i>{{ route }}</h1>
     <br>
 <div class="section header">
     <div class="container">
         <div class="row">
-            <h4>Dashboard - {{ name }}</h4>
-            <h4><button id="calculate">Calculate departure time</button></h4>
+            <h4>Your stop: {{ name }}</h4>
+{#            <h4><button id="calculate">Calculate departure time</button></h4>#}
         </div>
     </div>
 </div>
 <div class="section countdown">
     <div class="container">
         <div class="row">
-            <div id="timer" class="six columns offset-by-three">
-                <script type="text/javascript">
-                    $(window).on('load', function(){
-                        console.log("Window is loaded in dashboard");
-                        setInterval(alert("hello"), 8000)
-                    });
-                    $('#calculate').on('click', function(){
-                        console.log("You clicked me!");
-                        updateTimer({{ bus_info|tojson }}, {{ info.distance }});
-                    })
-{#                    $(window).load(function(){#}
-{#                        console.log("window is loaded in dashboard")#}
-{#                        setInterval(updateTimer({{ bus_info|tojson }}), 60000)#}
-{#                        setInterval(timeLeft(), 30000)#}
-{#                    });#}
-                </script>
+            <div class="countdown-timers" id="timer" class="six columns offset-by-three">
             </div>
             <div id="nobuses" class="six columns offset-by-three">
             </div>
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    $(window).on('load', function(){
+        console.log("Window is loaded in dashboard");
+        function update() {
+            updateTimer({{ bus_info|tojson }}, {{ info.distance }});
+        }
+        update();
+        setInterval(update, 60000);
+        console.log("Window is loaded in dashboard");
+    });
+{#    $('#calculate').on('click', function(){#}
+{#        console.log("You clicked me!");#}
+{#        updateTimer({{ bus_info|tojson }}, {{ info.distance }});#}
+{#    })#}
+</script>
 {% endblock %}

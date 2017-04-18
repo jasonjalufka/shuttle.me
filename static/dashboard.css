@@ -4,6 +4,10 @@ html {
     background-size: cover;
 }
 
+img {
+    padding-top: 20px;
+}
+
 body {
     color: white;
     text-align: center;

@@ -23,7 +23,13 @@
             </div>
 
             <div class="current-buses u-full-width">
-                <h5>Currently, there are {{ current }} buses running. Don't miss yours.</h5>
+                {% if current > 0 %}
+                    <h5>Currently, there are {{ current }} buses running. Don't miss yours!</h5>
+                {% elif current == 1 %}
+                    <h5>Currently, there is {{ current }} bus running. Don't miss it!</h5>
+                {% else %}
+                    <h5>There are 0 buses running. Come back tomorrow!</h5>
+                {% endif %}
             </div>
 
         </div>
