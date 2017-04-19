@@ -3,8 +3,9 @@
 {% block CSS %}<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">{% endblock %}
 {% block scripts %}
     <script type="text/javascript">var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
-    <script src="{{ url_for('static', filename='countdown.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='countdown.js') }}"></script>#}
     <script src="{{ url_for('static', filename='update.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquerytimer.js') }}"></script>
 {% endblock %}
 {% block content %}
     <img class="logo" src="/static/images/shuttle.png" alt="shuttle logo" style="width: 75px; height: 75px;"><h1></i>{{ route }}</h1>

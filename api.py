@@ -22,6 +22,8 @@ def get_route():
     #get list of running buses from ajax
     buses = request.args.getlist('buses[]')
     bus_on_way = get_closest_bus(buses)
+    print buses
+    print bus_on_way
     
     #bus_on_way = False
     if not bus_on_way:
@@ -34,12 +36,15 @@ def get_route():
         response = {}
         # get bus lat and lon
 
-        response["number"]=len(closest_buses)
+        response["number"] = len(closest_buses)
+        print response["number"]
 
         for bus in closest_buses:
             bus["formattedTime"] = get_eta(bus)
+            print bus["formattedTime"]
 
         response["buses"] = closest_buses
+        print response
 
         return jsonify(response)
 
@@ -84,10 +89,13 @@ def get_eta(bus):
             locations.append(str(stopLat) + ", " + str(stopLon))
             locations.insert(0, str(startLat) + ", " + str(startLon))
 
+        print("I made it here!")
         url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
-                &outFormat=json&key=tAY5u0ki3CMdkv7GoGxT7ctvXEaKCSX9' % '", "'.join(map(str, locations))
+                &outFormat=json&key=S5m4sfs0JdALt98tAxhXtXOyCdmv54Fm' % '", "'.join(map(str, locations))
+        print url
 
         urlresponse = requests.get(url).json()
+        print("did i make it here?")
 
         return urlresponse["route"]["formattedTime"]
 

@@ -1,4 +1,5 @@
 function updateTimer(bus_info, distance){
+    console.log("updateTimer called");
     $.ajax({
         type : 'GET',
         contentType : 'application/json',
@@ -8,34 +9,71 @@ function updateTimer(bus_info, distance){
         success : function(data){
             console.log("number of buses: " + data["number"]);
             var walkingTime = distance * 60;
-            var hms, time, seconds, id;
+            var hms, time, seconds, timer_id;
+            $('#nobuses').empty();
             $('.countdown-timers').empty();
+            $('#0').timer('remove');
+            $('#1').timer('remove');
+            $('#2').timer('remove');
+            $('#3').timer('remove');
+            $('#4').timer('remove');
+            $('#5').timer('remove');
 
-            for(var i = 0; i < data["number"]; i++) {
-                hms = data["buses"][i]["formattedTime"];
-                if (hms != -1) {
-                    time = hms.split(':');
-                    seconds = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]) - walkingTime;
-                    id = 0;
-                    var last_id = $('div[class="countdown-timers"]:last').attr('id');
-                    console.log(last_id);
-                    if(last_id == "timers"){
-                        // create a new div and append it to countdown-timers w/ id=0
-                        $('div[class="countdown-timers"]').append('<div id="0">');
-                        console.log("not last id");
+            timer_id = 0;
+            if(data["number"] > 0) {
+                for (var i = 0; i < data["number"]; i++) {
+                    console.log("Bus id: " + data["buses"][i]["id"])
+                    hms = data["buses"][i]["formattedTime"];
+                    if (hms != -1) {
+                        time = hms.split(':');
+                        seconds = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]) - walkingTime;
+                        if (seconds <= 0) {
+                            var this_id = i;
+                            $('#' + i).timer('remove');
+                            $('#nobuses').append("<p>Bus " + data["buses"][i]["id"] + " is past your stop.</p>");
+                        }
+                        else {
+                            var last_id = $('div[class="childTimer"]:last').attr('id');
+                            console.log("last id: " + last_id);
+                            if (!last_id) {
+                                // create a new div and append it to countdown-timers w/ id=0
+                                $('div[class="countdown-timers"]').append('<div id="0" class="childTimer"></div>');
+                                $('#0').timer({
+                                    countdown: true,
+                                    duration: seconds,
+                                    callback: function () {
+                                        $('#0').timer('remove');
+                                    }
+                                });
+                                $('#0').html('<p>Bus #'+ data["buses"][i]["id"] +'</p>')
+                                console.log("no timers, appending to countdown-timers div");
+                            }
+                            else {
+                                $('div[class="countdown-timers"]:last').append('<div id="' + timer_id + '">' + data["buses"][i]["id"] + '</div>');
+                                $('#' + timer_id).timer({
+                                    countdown: true,
+                                    duration: seconds,
+                                    callback: function () {
+                                        $('#' + timer_id).timer('remove');
+                                    }
+                                });
+                                $('#'+timer_id).html('Bus #'+ data["buses"][i]["id"])
+                                console.log('append to previous timer');
+                            }
+                            timer_id = timer_id + 1;
+                        }
                     }
-                    else{
-                        $('div[class="countdown-timers"]:last').append('<div id="'+ id +'">');
-                        console.log('append to last id')
+                    else {
+                        $('#nobuses').append("<p>Bus " + data["buses"][i]["id"] + " is past your stop.</p>");
+                        console.log('invalid bus found');
+                        continue;
                     }
-                    CreateTimer(id, seconds);
-                    id = id+1;
                 }
-                else {
-                    console.log('invalid bus found');
-                    continue;
-                }
-            };
+            }
+            else {
+                $('#nobuses').append("<h3>There are no buses running on your route at the moment</h3>");
+                console.log("no buses running");
+            }
         }, error : function(xhr){
             console.log("An error occurred: " + xhr.status + " " + xhr.statusText);
             $("#nobuses").empty();
