@@ -75,6 +75,23 @@ def dashboard():
         return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
                                      route=tracker.routes[int(route)]["name"], bus_info=buses, info=preferences)
+    if flask.request.method == 'GET':
+        if preferences['configuration'].get('isConfigured') == True:
+            stop = preferences['stop']
+            route = tracker.get_route(int(stop))
+            buses = get_buses(route)
+            print "GET SUCCESSFUL"
+            flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
+                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
+                                     route=tracker.routes[int(route)]["name"], bus_info=buses, info=preferences)
+        else:
+            return flask.render_template("notconfigured.html")
+            print "App not configured"
+
+        stop = preferences[""]
+        return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
+                                     lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
+                                     route=tracker.routes[int(route)]["name"], bus_info=buses, info=preferences)
 
 
 def get_buses(route):
