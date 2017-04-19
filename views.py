@@ -88,7 +88,7 @@ def dashboard():
             return flask.render_template("notconfigured.html")
             print "App not configured"
 
-        stop = preferences[""]
+        stop = preferences['stop']
         return flask.render_template("dashboard.html", name=tracker.stops[int(stop)]["name"],
                                      lat=tracker.stops[int(stop)]["lat"], lon=tracker.stops[int(stop)]["lon"],
                                      route=tracker.routes[int(route)]["name"], bus_info=buses, info=preferences)
