@@ -39,9 +39,6 @@ function UpdateTimer() {
 
     var TimeStr = (LeadingZero(Minutes) + ":" + LeadingZero(Seconds))
 
-    if(Minutes == 5 && Seconds == 1) {
-        // make pins flash here with ajax request
-    }
 
     Timer.innerHTML = TimeStr;
 }

@@ -8,6 +8,10 @@ img {
     padding-top: 20px;
 }
 
+hr {
+    width: 80%;
+}
+
 body {
     color: white;
     text-align: center;

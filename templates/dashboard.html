@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
     <img class="logo" src="/static/images/shuttle.png" alt="shuttle logo" style="width: 75px; height: 75px;"><h1></i>{{ route }}</h1>
-    <br>
+    <hr>
 <div class="section header">
     <div class="container">
         <div class="row">
@@ -20,7 +20,7 @@
 <div class="section countdown">
     <div class="container">
         <div class="row">
-            <div class="countdown-timers" id="timer" class="six columns offset-by-three">
+            <div class="countdown-timers" id="timers" class="six columns offset-by-three">
             </div>
             <div id="nobuses" class="six columns offset-by-three">
             </div>
@@ -35,7 +35,6 @@
         }
         update();
         setInterval(update, 60000);
-        console.log("Window is loaded in dashboard");
     });
 {#    $('#calculate').on('click', function(){#}
 {#        console.log("You clicked me!");#}
