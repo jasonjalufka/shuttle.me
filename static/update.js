@@ -22,6 +22,7 @@ function updateTimer(bus_info, distance){
             timer_id = 0;
             if(data["number"] > 0) {
                 for (var i = 0; i < data["number"]; i++) {
+                    var busDataId = "busData" + i;
                     console.log("Bus id: " + data["buses"][i]["id"])
                     hms = data["buses"][i]["formattedTime"];
                     if (hms != -1) {
@@ -30,14 +31,15 @@ function updateTimer(bus_info, distance){
                         if (seconds <= 0) {
                             var this_id = i;
                             $('#' + i).timer('remove');
-                            $('#nobuses').append("<p>Bus " + data["buses"][i]["id"] + " is past your stop.</p>");
+                            $('#nobuses').append("<p>You won't catch bus " + data["buses"][i]["id"] + "</p><i class='fa fa-frown-o' aria-hidden='true'></i>");
                         }
                         else {
                             var last_id = $('div[class="childTimer"]:last').attr('id');
                             console.log("last id: " + last_id);
                             if (!last_id) {
                                 // create a new div and append it to countdown-timers w/ id=0
-                                $('div[class="countdown-timers"]').append('<div id="0" class="childTimer"></div>');
+                                $('.countdown-timers').append('<div id="busData0"><i class="fa fa-bus fa-2" aria-hidden="true"></i> Bus #'+ data["buses"][i]["id"] +'</div>')
+                                $('div[class="countdown-timers"]:last').append('<div id="0" class="childTimer"></div>');
                                 $('#0').timer({
                                     countdown: true,
                                     duration: seconds,
@@ -45,11 +47,11 @@ function updateTimer(bus_info, distance){
                                         $('#0').timer('remove');
                                     }
                                 });
-                                $('#0').html('<p>Bus #'+ data["buses"][i]["id"] +'</p>')
                                 console.log("no timers, appending to countdown-timers div");
                             }
                             else {
-                                $('div[class="countdown-timers"]:last').append('<div id="' + timer_id + '">' + data["buses"][i]["id"] + '</div>');
+                                $('.countdown-timers:last').append('<div id="'+ busDataId + '"><i class="fa fa-bus fa-2" aria-hidden="true"></i> Bus #'+ data["buses"][i]["id"] +'</div>')
+                                $('div[class="countdown-timers"]:last').append('<div id="' + timer_id + '" class="childTimer">' + data["buses"][i]["id"] + '</div>');
                                 $('#' + timer_id).timer({
                                     countdown: true,
                                     duration: seconds,
@@ -57,28 +59,27 @@ function updateTimer(bus_info, distance){
                                         $('#' + timer_id).timer('remove');
                                     }
                                 });
-                                $('#'+timer_id).html('Bus #'+ data["buses"][i]["id"])
                                 console.log('append to previous timer');
                             }
                             timer_id = timer_id + 1;
                         }
                     }
                     else {
-                        $('#nobuses').append("<p>Bus " + data["buses"][i]["id"] + " is past your stop.</p>");
+                        $('#nobuses').append("<h3><i class='fa fa-frown-o' aria-hidden='true'></i> Bus " + data["buses"][i]["id"] + " is past your stop.</h3>");
                         console.log('invalid bus found');
                         continue;
                     }
                 }
             }
             else {
-                $('#nobuses').append("<h3>There are no buses running on your route at the moment</h3>");
+                $('#nobuses').append("<h3><i class='fa fa-frown-o' aria-hidden='true'></i> There are no buses running on your route at the moment</h3>");
                 console.log("no buses running");
             }
         }, error : function(xhr){
             console.log("An error occurred: " + xhr.status + " " + xhr.statusText);
             $("#nobuses").empty();
             $("#timer").empty();
-            $("#nobuses").append("<p>All buses are currently past your stop</p>");
+            $("#nobuses").append("<h3><i class='fa fa-frown-o' aria-hidden='true'></i> All buses are currently past your stop</h3>");
             }
     });
 };
@@ -87,16 +88,16 @@ function updateTimer(bus_info, distance){
 // Called every 30 seconds
 function timeLeft(){
     var time;
-    if( $('#timer').is(':empty') ) {
+
+    if( $('#0').is(':empty') ) {
         time = -1;
     }
     else {
-        time = $('#timer').val();
+        time = $('#0').val();
+
     }
-    $.ajax({
-    type: "POST",
-    url: $SCRIPT_ROOT + '_update_preferences',
-    data: time,
-    success: console.log(time)
-    });
+    $.post('_update_preferences', { timeLeft: time},
+        function(data){
+            console.log(data);
+        });
 };

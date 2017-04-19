@@ -22,6 +22,7 @@
     <div class="container">
         <div class="row">
             <div class="countdown-timers" id="timers" class="six columns offset-by-three">
+
             </div>
             <div id="nobuses" class="six columns offset-by-three">
             </div>
@@ -35,7 +36,12 @@
             updateTimer({{ bus_info|tojson }}, {{ info.distance }});
         }
         update();
-        setInterval(update, 60000);
+        setInterval(update, 1200000);
+        function getTimeLeft() {
+            timeLeft()
+        }
+        setTimeout(getTimeLeft, 10000);
+        setInterval(getTimeLeft, 30000);
     });
 {#    $('#calculate').on('click', function(){#}
 {#        console.log("You clicked me!");#}

@@ -10,10 +10,14 @@ closest_bus = {}
 closest_buses = []
 
 
-
 @app.route('/_update_preferences', methods=['POST'])
-def update_preferences():
-    data = request.get_json()
+def _update_preferences():
+    print " i am at beginning of prefs"
+    data = request.json()
+    preferences["timeLeft"] = data["timeLeft"]
+    print "i am here in update prefs"
+    print data["timeLeft"]
+
 
 @app.route('/_get_arrival_time', methods=['GET'])
 def get_route():
@@ -91,8 +95,7 @@ def get_eta(bus):
 
         print("I made it here!")
         url = 'https://www.mapquestapi.com/directions/v2/route?json={"locations":["%s"]}&timeType=1&useTraffic=true\
-                &outFormat=json&key=S5m4sfs0JdALt98tAxhXtXOyCdmv54Fm' % '", "'.join(map(str, locations))
-        print url
+                &outFormat=json&key=bZ9FuL2Gr8Vx9pigWKwrU5nlOWUCiDGP' % '", "'.join(map(str, locations))
 
         urlresponse = requests.get(url).json()
         print("did i make it here?")

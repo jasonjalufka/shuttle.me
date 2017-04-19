@@ -25,13 +25,35 @@ h1 {
 .countdown-timers>div {
     font-size: 5rem;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+}
+
+.childTimer {
+    float: right;
+}
+
+
+#0, #1, #2, #3, #4, #5 {
+    float: right;
+    margin-bottom: 20px;
+}
+/*#busData0 {*/
+    /*clear: left;*/
+    /*margin-bottom: 20px;*/
+/*}*/
+#busData0, #busData1, #busData2, #busData3, #busData4, #busData5, #busData6 {
+    float: left;
+    clear: left;
+    margin-bottom: 20px;
+}
+
+#nobuses {
 
 }
 
-#timer {
-    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
-    font-size: 3rem;
-    color: white;
-    text-align: center;
-    border: 1px solid white;
-}
+/*#timer {*/
+    /*font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;*/
+    /*font-size: 3rem;*/
+    /*color: white;*/
+    /*text-align: center;*/
+    /*border: 1px solid white;*/
+/*}*/
