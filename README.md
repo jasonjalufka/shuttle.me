@@ -1,15 +1,13 @@
 Shuttle.me
-
-- designed to make your day easier and keep you on time!
-
-
+ - A simple web application that estimates shuttle arrival times for
+   Texas State Students using Mapquest's API
 
 Installation
 ------------
 
 Via source code / GitHub:
 
-    1) Create a virtualenv to and clone the repo to a directory in the environment
+    1) Create a virtualenv and clone the repo to a directory in the environment
     
     2) Inside the virtualenv, run these commands...
 
@@ -17,3 +15,5 @@ Via source code / GitHub:
         $ cd shuttle.me
         $ pip install -r requirements.txt
         $ python StruggleBus.py
+        
+    3) Once shuttle.me is running, navigate to http://0.0.0.0:5000/ in your browser
